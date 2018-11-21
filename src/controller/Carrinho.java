@@ -8,8 +8,10 @@ public class Carrinho extends ColecaoProdutos{
 		return super.produtos;
 	}
 	
-	public int qtdProduto() {
+	public int qtdProdutos() {
 		return super.produtos.size(); 
 	}
+	
+	
 	
 }

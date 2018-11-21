@@ -6,7 +6,6 @@ public class Produto extends Estoque{
 	private String Descricao;
 	private ECategoriaProduto Categoria;
 	private double Valor;
-	private Estoque Estoque;
 	private String Figura;
 	
 	public Produto(String Descricao, ECategoriaProduto Categoria, double Valor, int qtd, String Figura) {
