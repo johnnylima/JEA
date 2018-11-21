@@ -1,4 +1,4 @@
-package controller;
+package controller; 
 
 public interface OperacoesProduto {
 	public boolean removeProduto(Produto o);

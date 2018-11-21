@@ -1,4 +1,4 @@
-package controller;
+package controller; 
 
 public class Estoque{
 	private int Quantidade;

@@ -1,4 +1,4 @@
-package Enum;
+package Enum; 
 
 public enum ETipoUsuario {
 	Cliente,

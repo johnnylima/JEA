@@ -1,4 +1,4 @@
-package controller;
+package controller; 
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ public class Carrinho extends ColecaoProdutos{
 	}
 	
 	public int qtdProduto() {
-		return super.produtos.size();
+		return super.produtos.size(); 
 	}
 	
 }
