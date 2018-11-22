@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Carrinho extends ColecaoProdutos{
 	
+	
+	
 	public ArrayList<Produto> getProdutos() {
 		return super.produtos;
 	}
@@ -12,6 +14,8 @@ public class Carrinho extends ColecaoProdutos{
 		return super.produtos.size(); 
 	}
 	
-	
+	public void quantidadeDoProduto() {
+		
+	}
 	
 }

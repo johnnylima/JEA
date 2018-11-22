@@ -80,6 +80,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JComboBox;
 
 public class TelaPrincipal extends JFrame {
 
@@ -94,6 +95,7 @@ public class TelaPrincipal extends JFrame {
 	private JTextField textCodigo;
 	
 	private int carrinhoValorTotal;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -342,7 +344,7 @@ public class TelaPrincipal extends JFrame {
 						JPanel controleCadastrar = new JPanel();
 						controleCadastrar.setLayout(null);
 						controleCadastrar.setName("controleCadastrar");
-						controleCadastrar.setBounds(0, 0, 780, 56);
+						controleCadastrar.setBounds(-1, -1, 780, 56);
 						Cadastrar.add(controleCadastrar);
 						
 						JSeparator separator_4 = new JSeparator();
@@ -359,9 +361,48 @@ public class TelaPrincipal extends JFrame {
 						JPanel panel = new JPanel();
 						panel.setBounds(225, 66, 330, 364);
 						Cadastrar.add(panel);
+						panel.setLayout(new FormLayout(new ColumnSpec[] {
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("default:grow"),
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("default:grow"),},
+							new RowSpec[] {
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,}));
+						
+						JLabel nomeProduto = new JLabel("Nome do Produto");
+						nomeProduto.setHorizontalAlignment(SwingConstants.RIGHT);
+						nomeProduto.setName("nomeProduto");
+						panel.add(nomeProduto, "4, 10, right, default");
+						
+						textField = new JTextField();
+						panel.add(textField, "6, 10, fill, default");
+						textField.setColumns(10);
+						
+						JLabel tipoProduto = new JLabel("Tipo:");
+						tipoProduto.setHorizontalAlignment(SwingConstants.RIGHT);
+						tipoProduto.setName("tipoProduto");
+						panel.add(tipoProduto, "4, 12, right, default");
+						
+						JComboBox comboBox = new JComboBox();
+						panel.add(comboBox, "6, 12, fill, default");
 		
 				JPanel Carrinho = new JPanel();
-				Carrinho.setBounds(0, 0, 780, 444);
+				Carrinho.setBounds(-1, -1, 780, 444);
 				pTela.add(Carrinho);
 				Carrinho.setLayout(null);
 				Carrinho.setName("Carrinho");
@@ -377,7 +418,7 @@ public class TelaPrincipal extends JFrame {
 						JPanel controleCarrinho = new JPanel();
 						controleCarrinho.setName("controleCarrinho");
 						controleCarrinho.setLayout(null);
-						controleCarrinho.setBounds(0, 0, 780, 56);
+						controleCarrinho.setBounds(-1, -1, 780, 56);
 						Carrinho.add(controleCarrinho);
 						
 						JLabel lblValorTotal = new JLabel("Valor Total:       R$");
@@ -750,6 +791,14 @@ public class TelaPrincipal extends JFrame {
 		b4.add(label_4);
 		
 		JPanel panel_1 = new JPanel();
+		panel_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override //CADASTRAR
+			public void mouseClicked(MouseEvent e) {
+				setVisible(e.getComponent(), telas);
+				setTela(roxoclaro3, e.getComponent(), titulo, cabecalho, bnts);
+			}
+		});
 		panel_1.setLayout(null);
 		panel_1.setBackground(new Color(30, 35, 54));
 		panel_1.setBounds(0, 312, 221, 56);

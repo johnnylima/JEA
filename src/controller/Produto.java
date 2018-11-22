@@ -5,10 +5,10 @@ import Enum.ECategoriaProduto;
 public class Produto extends Estoque{
 	private String Descricao;
 	private ECategoriaProduto Categoria;
-	private double Valor;
+	private int Valor;
 	private String Figura;
 	
-	public Produto(String Descricao, ECategoriaProduto Categoria, double Valor, int qtd, String Figura) {
+	public Produto(String Descricao, ECategoriaProduto Categoria, int Valor, int qtd, String Figura) {
 		this.setDescricao(Descricao);
 		this.setCategoria(Categoria);
 		this.setValor(Valor);
@@ -32,11 +32,11 @@ public class Produto extends Estoque{
 		Categoria = categoria;
 	}
 
-	public double getValor() {
+	public int getValor() {
 		return Valor;
 	}
 
-	public void setValor(double valor) {
+	public void setValor(int valor) {
 		Valor = valor;
 	}
 
