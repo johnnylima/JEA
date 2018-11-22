@@ -56,6 +56,7 @@ import Dominio.Produto;
 import Dominio.Usuario;
 import Enum.ECategoriaProduto;
 import Enum.ETipoUsuario;
+import Exceptions.LimiteMaximoException;
 
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JPasswordField;
@@ -200,7 +201,8 @@ public class TelaPrincipal extends JFrame {
 
 //									System.out.println(prod.getFigura());
 		}
-
+		Produto prod = new Produto("Burton", ECategoriaProduto.DVD, 25, 1, "/images/002-dvd.png");
+		produtoController.Inserir(prod);
 		// GERANDO PRODUTOS INICIAIS
 		// -----------------------------------------------------------------------------------------/
 
@@ -419,16 +421,6 @@ public class TelaPrincipal extends JFrame {
 						separator_3.setBounds(409, 0, 3, 56);
 						controleCarrinho.add(separator_3);
 						
-						JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
-						btnFinalizarCompra.addMouseListener(new MouseAdapter() {
-							@Override
-							public void mouseClicked(MouseEvent e) {
-								//CHAMAR A FUNÇÃO
-							}
-						});
-						btnFinalizarCompra.setName("btnFinalizarCompra");
-						btnFinalizarCompra.setBounds(233, 16, 166, 24);
-						controleCarrinho.add(btnFinalizarCompra);
 						
 						JLabel labelValorTotal = new JLabel("10.0");
 						labelValorTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -451,6 +443,25 @@ public class TelaPrincipal extends JFrame {
 								gbl_camadaCarrinho.rowWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 										Double.MIN_VALUE };
 								camadaCarrinho.setLayout(gbl_camadaCarrinho);
+								
+								JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
+								btnFinalizarCompra.addMouseListener(new MouseAdapter() {
+									@Override
+									public void mouseClicked(MouseEvent e) {
+										try {
+											pedidoController.Inserir(carrinhoController.GetAll());
+											carrinhoController.ExcluirTodos();
+											camadaCarrinho.removeAll();
+											camadaCarrinho.revalidate();
+											camadaCarrinho.repaint();
+										} catch (LimiteMaximoException e1) {
+											JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", 2);
+										}
+									}
+								});
+								btnFinalizarCompra.setName("btnFinalizarCompra");
+								btnFinalizarCompra.setBounds(233, 16, 166, 24);
+								controleCarrinho.add(btnFinalizarCompra);
 
 		JPanel Consultar = new JPanel();
 		Consultar.setBounds(0, 0, 780, 444);
@@ -1035,21 +1046,25 @@ public class TelaPrincipal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 
-					carrinhoController.Inserir(p);
-					//carrinho.addProduto();
-					//loja.removeProduto(p);
-					
-					setCarrinhoValorTotal(p.getValor());
-					
-					scroll.removeAll();
-					scroll.revalidate();
-					scroll.repaint();
-					addProdutoCamada(produtoController.GetAll(), scroll);
-
+						carrinhoController.Inserir(p);
+						setCarrinhoValorTotal(p.getValor());
+						scroll.removeAll();
+						scroll.revalidate();
+						scroll.repaint();
+						addProdutoCamada(produtoController.GetAll(), scroll);
+				
 				}
 			});
-
-			produto.add(botao);
+			if(p.getQuantidadeDisponivel() <= 0) {
+				JLabel indisponivel = new JLabel("Indisponivel");
+				indisponivel.setMaximumSize(new Dimension(132, 25));
+				indisponivel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				indisponivel.setHorizontalAlignment(SwingConstants.CENTER);
+				produto.add(indisponivel);
+			} else {
+				produto.add(botao);
+			}
+			
 			botao.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 			produto.setFocusTraversalPolicy(
@@ -1067,11 +1082,7 @@ public class TelaPrincipal extends JFrame {
 			 		
 			 		System.out.println(p.getValor()*atual);
 			 		
-			 		
-			 		
-			 		
-			 		
-			 		
+			 		p.setQuantidadeVendida(atual);
 //			 		System.out.println(anterior);
 //			 		System.out.println(atual);
 			 	}

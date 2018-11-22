@@ -18,6 +18,10 @@ public class CarrinhoRepository implements IBaseInterface<Produto>{
 		_carrinho.remove(produto);
 		
 	}
+	
+	public void ExcluirTodos() {
+		_carrinho.clear();
+	}
 
 	public ArrayList<Produto> GetAll() {
 		return _carrinho;

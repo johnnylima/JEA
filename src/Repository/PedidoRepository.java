@@ -5,19 +5,23 @@ import java.util.Random;
 
 import Dominio.Pedido;
 import Dominio.Produto;
-import Repository.Interfaces.IBaseInterface;
+import Exceptions.LimiteMaximoException;
 
 public class PedidoRepository {
 
 	private ArrayList<Pedido> _pedidos = new ArrayList<Pedido>();
 	
-	public void Inserir(ArrayList<Produto> produto) {
+	public void Inserir(ArrayList<Produto> produto) throws LimiteMaximoException {
 		Pedido pedido = new Pedido();
 		pedido.setCodigo(gerarCodigo());
 		
 		for	(Produto prod : produto) {
-			pedido.setValorTotal(prod.getValor());
-			pedido.setProdutos(prod);
+				if(prod.getQuantidadeVendida() <= 10) {
+					pedido.setValorTotal(prod.getValor()*prod.getQuantidadeVendida());
+					pedido.setProdutos(prod);
+				} else {
+					throw new LimiteMaximoException();
+				}
 		}
 		
 		pedido.setUsuario(LoginRepository.getSession().getLogin());
@@ -25,8 +29,7 @@ public class PedidoRepository {
 	}
 
 	public void Excluir(Pedido pedido) {
-		// TODO Auto-generated method stub
-		
+		_pedidos.remove(pedido);
 	}
 
 	public ArrayList<Pedido> GetAll() {
