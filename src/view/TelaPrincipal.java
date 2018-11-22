@@ -420,6 +420,12 @@ public class TelaPrincipal extends JFrame {
 						controleCarrinho.add(separator_3);
 						
 						JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
+						btnFinalizarCompra.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								//CHAMAR A FUNÇÃO
+							}
+						});
 						btnFinalizarCompra.setName("btnFinalizarCompra");
 						btnFinalizarCompra.setBounds(233, 16, 166, 24);
 						controleCarrinho.add(btnFinalizarCompra);
