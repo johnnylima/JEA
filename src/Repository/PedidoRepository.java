@@ -11,9 +11,11 @@ public class PedidoRepository {
 
 	private ArrayList<Pedido> _pedidos = new ArrayList<Pedido>();
 	
+	
 	public void Inserir(ArrayList<Produto> produto) throws LimiteMaximoException {
 		Pedido pedido = new Pedido();
 		pedido.setCodigo(gerarCodigo());
+		
 		for	(Produto prod : produto) {
 				if(prod.getQuantidadeVendida() <= 10) {
 					pedido.setValorTotal(prod.getValor()*prod.getQuantidadeVendida());
@@ -27,6 +29,7 @@ public class PedidoRepository {
 		pedido.setUsuario(LoginRepository.getSession().getLogin());
 		_pedidos.add(pedido);
 	}
+	
 
 	public void Excluir(Pedido pedido) {
 		_pedidos.remove(pedido);

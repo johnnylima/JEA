@@ -39,6 +39,7 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 import javax.swing.JLayeredPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.JDesktopPane;
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
@@ -50,6 +51,7 @@ import javax.swing.JTabbedPane;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import com.sun.prism.image.ViewPort;
 
 import Dominio.Pedido;
 import Dominio.Produto;
@@ -64,6 +66,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.BoxLayout;
 import javax.swing.SpringLayout;
 import net.miginfocom.swing.MigLayout;
+import sun.util.resources.cldr.ii.CalendarData_ii_CN;
+
 import java.awt.Rectangle;
 import java.awt.ComponentOrientation;
 import javax.swing.DebugGraphics;
@@ -97,10 +101,12 @@ public class TelaPrincipal extends JFrame {
 	PedidoController pedidoController = new PedidoController();
 	UsuarioController usuarioController = new UsuarioController();
 	
+	
+	private Component[] camadaScroll;
+	
 	private JPanel pTela;
 	private JTextField textCodigo;
 	
-	private int carrinhoValorTotal;
 
 	/**
 	 * Launch the application.
@@ -173,8 +179,9 @@ public class TelaPrincipal extends JFrame {
 		usuarioController.Inserir(User1);
 		usuarioController.Inserir(User2);
 		//Logar Usuario antes
-		if(LoginController.Logar("Gerente", "123"))
-			System.out.println("logado");
+		if(LoginController.Logar("Gerente", "123")) {
+//			System.out.println("logado");
+		}
 		else
 			System.out.println("erro ao logar");
 		
@@ -201,101 +208,6 @@ public class TelaPrincipal extends JFrame {
 
 //									System.out.println(prod.getFigura());
 		}
-		// GERANDO PRODUTOS INICIAIS
-		// -----------------------------------------------------------------------------------------/
-
-		// GERANDO PEDIDOS FAKE
-		// -----------------------------------------------------------------------------------------/
-		// no final >> crinaod os produtos na classe
-		// TODO gerando produtos iniciais
-		
-		/*
-		String[] pedidoDescricao = { "Burton", "Gwendolyn", "Acton", "Colt", "Kerry", "Briar", "Lawrence", "Preston",
-				"Maite", "Ishmael", "Kyle", "Willa", "Evangeline", "Luke", "Fallon" };
-		String[] pedidoCategoria = { "DVD", "CD", "CD", "LIVRO", "CD", "DVD", "LIVRO", "LIVRO", "CD", "LIVRO", "CD",
-				"LIVRO", "LIVRO", "CD", "DVD" };
-		int[] quantidadeComprada = { 1, 3, 2, 2, 1, 2, 2, 1, 1, 1, 3, 4, 6, 4, 5 };
-		String[] pedidofiguraLivro = { "/images/003-livro.png", "/images/002-dvd.png", "/images/001-cd.png" };
-
-		Pedido pedido1 = new Pedido();
-		Pedido pedido2 = new Pedido();
-		Pedido pedido3 = new Pedido();
-
-		int b, vTotal = 0;
-		for (int i = 0; i < 5; i++) {
-			Produto prod = null;
-			b = i + 1;
-			if (pedidoCategoria[i] == "LIVRO") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.LIVRO, 30, quantidadeComprada[i],
-						pedidofiguraLivro[0]);
-				vTotal += 30 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "DVD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.DVD, 25, quantidadeComprada[i],
-						pedidofiguraLivro[1]);
-				vTotal += 25 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "CD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.CD, 10, quantidadeComprada[i],
-						pedidofiguraLivro[2]);
-				vTotal += 10 * quantidadeComprada[i];
-			}
-			pedido1.addProduto(prod);
-		}
-		pedido1.setValorTotal(vTotal);
-
-		b = 0;
-		vTotal = 0;
-		for (int i = 5; i < 7; i++) {
-			Produto prod = null;
-			b = i + 1;
-			if (pedidoCategoria[i] == "LIVRO") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.LIVRO, 30, quantidadeComprada[i],
-						pedidofiguraLivro[0]);
-				vTotal += 30 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "DVD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.DVD, 25, quantidadeComprada[i],
-						pedidofiguraLivro[1]);
-				vTotal += 25 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "CD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.CD, 10, quantidadeComprada[i],
-						pedidofiguraLivro[2]);
-				vTotal += 10 * quantidadeComprada[i];
-			}
-
-			pedido2.addProduto(prod);
-		}
-		pedido2.setValorTotal(vTotal);
-
-		b = 0;
-		vTotal = 0;
-		for (int i = 7; i < 15; i++) {
-			Produto prod = null;
-			b = i + 1;
-			if (pedidoCategoria[i] == "LIVRO") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.LIVRO, 30, quantidadeComprada[i],
-						pedidofiguraLivro[0]);
-				vTotal += 30 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "DVD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.DVD, 25, quantidadeComprada[i],
-						pedidofiguraLivro[1]);
-				vTotal += 25 * quantidadeComprada[i];
-			} else if (pedidoCategoria[i] == "CD") {
-				prod = new Produto(pedidoDescricao[i], ECategoriaProduto.CD, 10, quantidadeComprada[i],
-						pedidofiguraLivro[2]);
-				vTotal += 10 * quantidadeComprada[i];
-			}
-
-			pedido3.addProduto(prod);
-		}
-		pedido3.setValorTotal(vTotal);
-
-		Pedidos allPedidos = new Pedidos();
-		allPedidos.addPedido(pedido1);
-		allPedidos.addPedido(pedido2);
-		allPedidos.addPedido(pedido3);
-		*/
-		
-		// GERANDO PEDIDOS FAKE
-		// -----------------------------------------------------------------------------------------/
 		
 
 		setBackground(new Color(51, 102, 255));
@@ -350,6 +262,124 @@ public class TelaPrincipal extends JFrame {
 		pTela.setBounds(221, 147, 780, 444);
 		contentPane.add(pTela);
 		pTela.setLayout(null);
+								
+										JPanel Produtos = new JPanel();
+										Produtos.setBounds(0, 0, 780, 444);
+										pTela.add(Produtos);
+										Produtos.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+										Produtos.setAutoscrolls(true);
+										Produtos.setName("Produtos");
+										Produtos.setBackground(fundo);
+										Produtos.setLayout(null);
+										
+												JScrollPane scrollProdutos = new JScrollPane();
+												scrollProdutos.setName("scrollProdutos");
+												scrollProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+												scrollProdutos.setBorder(null);
+												scrollProdutos.setBounds(-1, -1, 780, 444);
+												scrollProdutos.getVerticalScrollBar().setUnitIncrement(16);
+												Produtos.add(scrollProdutos);
+												
+														JPanel camadaProdutos = new JPanel();
+														camadaProdutos.setName("camadaProdutos");
+														camadaProdutos.setBackground(fundo);
+														scrollProdutos.setViewportView(camadaProdutos);
+														GridBagLayout gbl_camadaProdutos = new GridBagLayout();
+														gbl_camadaProdutos.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31 };
+														gbl_camadaProdutos.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30 };
+														gbl_camadaProdutos.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+														gbl_camadaProdutos.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+														camadaProdutos.setLayout(gbl_camadaProdutos);
+						
+								JPanel Carrinho = new JPanel();
+								Carrinho.setBounds(0, 0, 780, 444);
+								pTela.add(Carrinho);
+								Carrinho.setLayout(null);
+								Carrinho.setName("Carrinho");
+								Carrinho.setBackground(new Color(139, 69, 19));
+								
+										JScrollPane scrollCarrinho = new JScrollPane();
+										scrollCarrinho.setName("scrollCarrinho");
+										scrollCarrinho.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+										scrollCarrinho.setBorder(null);
+										scrollCarrinho.setBounds(-1, 55, 780, 388);
+										scrollCarrinho.getVerticalScrollBar().setUnitIncrement(16);
+										
+										JPanel controleCarrinho = new JPanel();
+										controleCarrinho.setName("controleCarrinho");
+										controleCarrinho.setLayout(null);
+										controleCarrinho.setBounds(0, 0, 780, 56);
+										Carrinho.add(controleCarrinho);
+										
+										JLabel lblValorTotal = new JLabel("Valor Total:       R$");
+										lblValorTotal.setName("codigoPedido");
+										lblValorTotal.setBounds(10, 16, 105, 24);
+										controleCarrinho.add(lblValorTotal);
+										
+										
+										JSeparator separator_2 = new JSeparator();
+										separator_2.setOrientation(SwingConstants.VERTICAL);
+										separator_2.setName("s1");
+										separator_2.setBounds(220, 0, 3, 56);
+										controleCarrinho.add(separator_2);
+										
+										JSeparator separator_3 = new JSeparator();
+										separator_3.setOrientation(SwingConstants.VERTICAL);
+										separator_3.setName("s2");
+										separator_3.setBounds(409, 0, 3, 56);
+										controleCarrinho.add(separator_3);
+										
+										
+										JLabel labelValorTotal = new JLabel(String.valueOf(carrinhoController.getValorTotal()));
+										labelValorTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
+										labelValorTotal.setHorizontalAlignment(SwingConstants.RIGHT);
+										labelValorTotal.setHorizontalTextPosition(SwingConstants.RIGHT);
+										labelValorTotal.setName("labelValorTotal");
+										labelValorTotal.setBounds(125, 16, 72, 24);
+										controleCarrinho.add(labelValorTotal);
+										Carrinho.add(scrollCarrinho);
+										
+												JPanel camadaCarrinho = new JPanel();
+												camadaCarrinho.setName("camadaCarrinho");
+												camadaCarrinho.setBackground(new Color(40, 51, 80));
+												scrollCarrinho.setViewportView(camadaCarrinho);
+												GridBagLayout gbl_camadaCarrinho = new GridBagLayout();
+												gbl_camadaCarrinho.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31, 0 };
+												gbl_camadaCarrinho.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30, 0 };
+												gbl_camadaCarrinho.columnWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+														Double.MIN_VALUE };
+												gbl_camadaCarrinho.rowWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+														Double.MIN_VALUE };
+												camadaCarrinho.setLayout(gbl_camadaCarrinho);
+												
+												JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
+												btnFinalizarCompra.addMouseListener(new MouseAdapter() {
+													//TODO FINALIZAR
+													@Override //FINALIZAR
+													public void mouseClicked(MouseEvent e) {
+														try {
+															
+															if(!(carrinhoController.GetAll().isEmpty())) {
+//												System.out.println("ko");
+																pedidoController.Inserir(carrinhoController.GetAll());
+																carrinhoController.zerarValorTotal();
+																labelValorTotal.setText(String.valueOf(carrinhoController.getValorTotal()));
+																
+																carrinhoController.ExcluirTodos();
+																
+																repaintAllCamadas();
+																
+																
+															}
+															
+														} catch (LimiteMaximoException e1) {
+															JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", 2);
+														}
+													}
+												});
+												btnFinalizarCompra.setName("btnFinalizarCompra");
+												btnFinalizarCompra.setBounds(233, 16, 166, 24);
+												controleCarrinho.add(btnFinalizarCompra);
 				
 						JPanel Cadastrar = new JPanel();
 						Cadastrar.setName("Cadastrar");
@@ -380,86 +410,6 @@ public class TelaPrincipal extends JFrame {
 						JPanel panel = new JPanel();
 						panel.setBounds(225, 66, 330, 364);
 						Cadastrar.add(panel);
-		
-				JPanel Carrinho = new JPanel();
-				Carrinho.setBounds(0, 0, 780, 444);
-				pTela.add(Carrinho);
-				Carrinho.setLayout(null);
-				Carrinho.setName("Carrinho");
-				Carrinho.setBackground(new Color(139, 69, 19));
-				
-						JScrollPane scrollCarrinho = new JScrollPane();
-						scrollCarrinho.setName("scrollCarrinho");
-						scrollCarrinho.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-						scrollCarrinho.setBorder(null);
-						scrollCarrinho.setBounds(-1, 55, 780, 388);
-						scrollCarrinho.getVerticalScrollBar().setUnitIncrement(16);
-						
-						JPanel controleCarrinho = new JPanel();
-						controleCarrinho.setName("controleCarrinho");
-						controleCarrinho.setLayout(null);
-						controleCarrinho.setBounds(0, 0, 780, 56);
-						Carrinho.add(controleCarrinho);
-						
-						JLabel lblValorTotal = new JLabel("Valor Total:       R$");
-						lblValorTotal.setName("codigoPedido");
-						lblValorTotal.setBounds(10, 16, 105, 24);
-						controleCarrinho.add(lblValorTotal);
-						
-						
-						JSeparator separator_2 = new JSeparator();
-						separator_2.setOrientation(SwingConstants.VERTICAL);
-						separator_2.setName("s1");
-						separator_2.setBounds(220, 0, 3, 56);
-						controleCarrinho.add(separator_2);
-						
-						JSeparator separator_3 = new JSeparator();
-						separator_3.setOrientation(SwingConstants.VERTICAL);
-						separator_3.setName("s2");
-						separator_3.setBounds(409, 0, 3, 56);
-						controleCarrinho.add(separator_3);
-						
-						
-						JLabel labelValorTotal = new JLabel("10.0");
-						labelValorTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
-						labelValorTotal.setHorizontalAlignment(SwingConstants.RIGHT);
-						labelValorTotal.setHorizontalTextPosition(SwingConstants.RIGHT);
-						labelValorTotal.setName("labelValorTotal");
-						labelValorTotal.setBounds(125, 16, 72, 24);
-						controleCarrinho.add(labelValorTotal);
-						Carrinho.add(scrollCarrinho);
-						
-								JPanel camadaCarrinho = new JPanel();
-								camadaCarrinho.setName("camadaCarrinho");
-								camadaCarrinho.setBackground(new Color(40, 51, 80));
-								scrollCarrinho.setViewportView(camadaCarrinho);
-								GridBagLayout gbl_camadaCarrinho = new GridBagLayout();
-								gbl_camadaCarrinho.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31, 0 };
-								gbl_camadaCarrinho.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30, 0 };
-								gbl_camadaCarrinho.columnWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-										Double.MIN_VALUE };
-								gbl_camadaCarrinho.rowWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-										Double.MIN_VALUE };
-								camadaCarrinho.setLayout(gbl_camadaCarrinho);
-								
-								JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
-								btnFinalizarCompra.addMouseListener(new MouseAdapter() {
-									@Override
-									public void mouseClicked(MouseEvent e) {
-										try {
-											pedidoController.Inserir(carrinhoController.GetAll());
-											carrinhoController.ExcluirTodos();
-											camadaCarrinho.removeAll();
-											camadaCarrinho.revalidate();
-											camadaCarrinho.repaint();
-										} catch (LimiteMaximoException e1) {
-											JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", 2);
-										}
-									}
-								});
-								btnFinalizarCompra.setName("btnFinalizarCompra");
-								btnFinalizarCompra.setBounds(233, 16, 166, 24);
-								controleCarrinho.add(btnFinalizarCompra);
 
 		JPanel Consultar = new JPanel();
 		Consultar.setBounds(0, 0, 780, 444);
@@ -520,9 +470,7 @@ public class TelaPrincipal extends JFrame {
 				if(((JTextField) e.getSource()).getText().trim().equals("") || (pedidoController.getPedido(((JTextField) e.getSource()).getText())==null)) JOptionPane.showMessageDialog(null, "Digite um código válido.","CÓDIGO INVÁLIDO",2);
 				else {
 
-					camadaConsultar.removeAll();
-					camadaConsultar.revalidate();
-					camadaConsultar.repaint();
+					repaintAllCamadas();
 					addPedidoCamada((pedidoController.getPedido(((JTextField) e.getSource()).getText())), camadaConsultar);
 				}
 				((JTextField) e.getSource()).setText("");			
@@ -538,9 +486,7 @@ public class TelaPrincipal extends JFrame {
 		btnTodos.addMouseListener(new MouseAdapter() {
 			@Override // LISTAR TODOS
 			public void mouseClicked(MouseEvent e) {
-				camadaConsultar.removeAll();
-				camadaConsultar.revalidate();
-				camadaConsultar.repaint();
+				repaintAllCamadas();
 				addPedidosCamada(pedidoController.GetAll(), camadaConsultar);
 			}
 		});
@@ -605,34 +551,6 @@ public class TelaPrincipal extends JFrame {
 		 * pedido.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] {
 		 * labelCodigo, codigo })); //
 		 */
-
-		JPanel Produtos = new JPanel();
-		Produtos.setBounds(0, 0, 780, 444);
-		pTela.add(Produtos);
-		Produtos.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		Produtos.setAutoscrolls(true);
-		Produtos.setName("Produtos");
-		Produtos.setBackground(fundo);
-		Produtos.setLayout(null);
-
-		JScrollPane scrollProdutos = new JScrollPane();
-		scrollProdutos.setName("scrollProdutos");
-		scrollProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollProdutos.setBorder(null);
-		scrollProdutos.setBounds(-1, -1, 780, 444);
-		scrollProdutos.getVerticalScrollBar().setUnitIncrement(16);
-		Produtos.add(scrollProdutos);
-
-		JPanel camadaProdutos = new JPanel();
-		camadaProdutos.setName("camadaProdutos");
-		camadaProdutos.setBackground(fundo);
-		scrollProdutos.setViewportView(camadaProdutos);
-		GridBagLayout gbl_camadaProdutos = new GridBagLayout();
-		gbl_camadaProdutos.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31 };
-		gbl_camadaProdutos.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30 };
-		gbl_camadaProdutos.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_camadaProdutos.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		camadaProdutos.setLayout(gbl_camadaProdutos);
 
 		// TODO @MENUS
 		JPanel b2 = new JPanel();
@@ -711,9 +629,7 @@ public class TelaPrincipal extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				setVisible(e.getComponent(), telas);
 				setTela(roxoclaro3, e.getComponent(), titulo, cabecalho, bnts);
-				camadaConsultar.removeAll();
-				camadaConsultar.revalidate();
-				camadaConsultar.repaint();
+				repaintAllCamadas();
 			}
 		});
 		b3.setLayout(null);
@@ -887,6 +803,8 @@ public class TelaPrincipal extends JFrame {
 		// TODAS AS TELAS INVISIVEIS
 		for (Component tela : telas)
 			tela.setVisible(false);
+		
+		camadaScroll = pTela.getComponents();
 
 	}
 
@@ -987,17 +905,25 @@ public class TelaPrincipal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 //					JOptionPane.showMessageDialog(null, e.getComponent().getName());
+					
 
 					carrinhoController.Excluir(p);
-					//loja.addProduto();
-					//carrinho.removeProduto(p);
-//					System.out.println("carrinho: " + carrinho.qtdProduto() + "\nloja: " + loja.qtdProduto());
+					
+					if (scroll.getName() == "camadaCarrinho") {
+						JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
+						for(Component c: controle.getComponents()) {
+							if(c.getName().equals("labelValorTotal")) {
+								JLabel a= (JLabel) c;
+//								System.out.println(a.getText());
+								carrinhoController.setValorTotal(carrinhoController.GetAll());
+								a.setText(String.valueOf(carrinhoController.getValorTotal()));
+							}
+						}
+					}
+					
 
-//					System.out.println(e.getComponent().getParent().getName());
-
-					scroll.removeAll();
-					scroll.revalidate();
-					scroll.repaint();
+					repaintAllCamadas();
+					
 					addProdutoCamada(carrinhoController.GetAll(), scroll);
 
 //					System.out.println(p.estoqueQtd());
@@ -1042,17 +968,30 @@ public class TelaPrincipal extends JFrame {
 				 
 			 	public void stateChanged(ChangeEvent e) {
 			 		
-			 		int anterior = ((int)(((JSpinner)e.getSource()).getPreviousValue()));
+//			 		int anterior = ((int)(((JSpinner)e.getSource()).getPreviousValue()));
 			 		int atual = ((int)(((JSpinner)e.getSource()).getValue()));
+			 		
+			 		//QUANTIDADE VENDIDA
+			 		p.setQuantidadeVendida(atual);
+					carrinhoController.setValorTotal(carrinhoController.GetAll());
+					
+					if (scroll.getName() == "camadaCarrinho") {
+						JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
+						for(Component c: controle.getComponents()) {
+							if(c.getName().equals("labelValorTotal")) {
+								JLabel a= (JLabel) c;
+//								System.out.println(a.getText());
+								a.setText(String.valueOf(carrinhoController.getValorTotal()));
+							}
+						}
+					}
 			 		
 			 	}
 			 });
 			spinner.setName(nomeSpinner);// nomeSpinner="spinner1"
-			if (p.getQuantidadeDisponivel() >= 1)
-				spinner.setModel(new SpinnerNumberModel(1, 1, p.getQuantidadeDisponivel(), 1));
-			else if (p.getQuantidadeDisponivel() == 0)
-				spinner.setModel(new SpinnerNumberModel(0, 0, p.getQuantidadeDisponivel(), 0));
+			spinner.setModel(new SpinnerNumberModel(p.getQuantidadeVendida(), 1, p.getQuantidadeDisponivel(), 1));
 			spinner.setMaximumSize(new Dimension(60, 25));
+			
 			produto.add(spinner);
 		}
 		
@@ -1064,17 +1003,26 @@ public class TelaPrincipal extends JFrame {
 				// TODO BOTÃO ADICIONAR
 				@Override
 				public void mouseClicked(MouseEvent e) {
-						carrinhoController.Inserir(p);
-						setCarrinhoValorTotal(p.getValor());
-						scroll.removeAll();
-						scroll.revalidate();
-						scroll.repaint();
-						addProdutoCamada(produtoController.GetAll(), scroll);
-				
+						
+						if(!(carrinhoController.GetAll().contains(p))) { //se o produto não estiver dentro do carrinho ele adiciona
+							
+							//QUANTIDADE VENDIDA
+							p.setQuantidadeVendida(1);
+									
+							carrinhoController.Inserir(p);
+							carrinhoController.setValorTotal(carrinhoController.GetAll());
+							
+
+							repaintAllCamadas();
+							
+							addProdutoCamada(produtoController.GetAll(), scroll);
+						}
+//						else System.out.println("já tem");
 				}
+				
 			});
 			
-			if(p.getQuantidadeDisponivel() <= 0) {
+			if(p.getQuantidadeDisponivel() < 1) {
 				JLabel indisponivel = new JLabel("Indisponivel");
 				indisponivel.setMaximumSize(new Dimension(132, 25));
 				indisponivel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1097,6 +1045,17 @@ public class TelaPrincipal extends JFrame {
 			qtd.setAlignmentX(Component.CENTER_ALIGNMENT);
 			qtd.setHorizontalAlignment(SwingConstants.CENTER);
 			produto.add(qtd);
+		}
+		
+		if (scroll.getName() == "camadaCarrinho") {
+			JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
+			for(Component c: controle.getComponents()) {
+				if(c.getName().equals("labelValorTotal")) {
+					JLabel a= (JLabel) c;
+//					System.out.println(a.getText());
+					a.setText(String.valueOf(carrinhoController.getValorTotal()));
+				}
+			}
 		}
 
 		produto.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { figura, descricao, preco }));
@@ -1147,9 +1106,7 @@ public class TelaPrincipal extends JFrame {
 		pedido.addMouseListener(new MouseAdapter() {
 			@Override // PEDIDO
 			public void mouseClicked(MouseEvent e) {
-				scroll.removeAll();
-				scroll.revalidate();
-				scroll.repaint();
+				repaintAllCamadas();
 				addProdutoCamada(p.getProdutos(), scroll);
 			}
 		});
@@ -1256,285 +1213,30 @@ public class TelaPrincipal extends JFrame {
 		}
 	}
 		
+	
+	public void repaintAllCamadas() {
+		for(Component x: camadaScroll) {
+			JPanel a = (JPanel) x;
+			for(Component s: a.getComponents()) {
+//				System.out.println("s = " + s.getName());
+				if(s instanceof JScrollPane) {
+					JViewport u = ((JScrollPane) s).getViewport();
+					JPanel scroll = (JPanel)u.getView();
+					
+					scroll.removeAll();
+					scroll.revalidate();
+					scroll.repaint();
+//					System.out.println(scroll.getName());
+				}
+			}
+//			System.out.println(a.getComponentCount());
+		}
 		
-	public int getCarrinhoValorTotal() {
-		return carrinhoValorTotal;
-	}
-
-	public void setCarrinhoValorTotal(int carrinhoValorTotal) {
-		this.carrinhoValorTotal += carrinhoValorTotal;
+//		for(JPanel scroll: c) {
+//			scroll.removeAll();
+//			scroll.revalidate();
+//			scroll.repaint();
+//		}
 	}
 	
-	public void ValorTotal(JPanel camada) {
-		carrinhoController.GetAll();
-	}
 }// final
-
-/*
- * JPanel panel = new JPanel(); GridBagConstraints gbc_panel = new
- * GridBagConstraints(); gbc_panel.fill = GridBagConstraints.BOTH;
- * gbc_panel.insets = new Insets(0, 0, 5, 5); gbc_panel.gridx = 1;
- * gbc_panel.gridy = 1; camadaProdutos.add(panel, gbc_panel);
- * panel.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel.setBackground(Color.WHITE); panel.setLayout(new BoxLayout(panel,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_5 = new JLabel(""); label_5.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/001-cd.png")));
- * label_5.setHorizontalAlignment(SwingConstants.CENTER);
- * label_5.setAlignmentX(0.5f); panel.add(label_5);
- * 
- * JLabel label_6 = new JLabel("LIVRO 01"); label_6.setMaximumSize(new
- * Dimension(132, 25)); label_6.setHorizontalAlignment(SwingConstants.CENTER);
- * label_6.setAlignmentX(0.5f); panel.add(label_6);
- * 
- * JLabel label_7 = new JLabel("R$ 10"); label_7.setMaximumSize(new
- * Dimension(132, 25)); label_7.setHorizontalAlignment(SwingConstants.CENTER);
- * label_7.setAlignmentX(0.5f); panel.add(label_7);
- * 
- * JButton button = new JButton("Adicionar"); button.setAlignmentX(0.5f);
- * panel.add(button);
- * 
- * JSpinner spinner_1 = new JSpinner(); spinner_1.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_1.setMaximumSize(new Dimension(60,
- * 25)); panel.add(spinner_1);
- * 
- * JPanel panel_1 = new JPanel(); GridBagConstraints gbc_panel_1 = new
- * GridBagConstraints(); gbc_panel_1.fill = GridBagConstraints.BOTH;
- * gbc_panel_1.insets = new Insets(0, 0, 5, 5); gbc_panel_1.gridx = 3;
- * gbc_panel_1.gridy = 1; camadaProdutos.add(panel_1, gbc_panel_1);
- * panel_1.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel_1.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel_1.setBackground(Color.WHITE); panel_1.setLayout(new BoxLayout(panel_1,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_8 = new JLabel(""); label_8.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/002-dvd.png")));
- * label_8.setHorizontalAlignment(SwingConstants.CENTER);
- * label_8.setAlignmentX(0.5f); panel_1.add(label_8);
- * 
- * JLabel label_9 = new JLabel("LIVRO 01"); label_9.setMaximumSize(new
- * Dimension(132, 25)); label_9.setHorizontalAlignment(SwingConstants.CENTER);
- * label_9.setAlignmentX(0.5f); panel_1.add(label_9);
- * 
- * JLabel label_10 = new JLabel("R$ 10"); label_10.setMaximumSize(new
- * Dimension(132, 25)); label_10.setHorizontalAlignment(SwingConstants.CENTER);
- * label_10.setAlignmentX(0.5f); panel_1.add(label_10);
- * 
- * JButton button_1 = new JButton("Adicionar"); button_1.setAlignmentX(0.5f);
- * panel_1.add(button_1);
- * 
- * JSpinner spinner_2 = new JSpinner(); spinner_2.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_2.setMaximumSize(new Dimension(60,
- * 25)); panel_1.add(spinner_2); JPanel PRODUTO2 = new JPanel();
- * GridBagConstraints gbc_PRODUTO2 = new GridBagConstraints(); gbc_PRODUTO2.fill
- * = GridBagConstraints.BOTH; gbc_PRODUTO2.insets = new Insets(0, 0, 5, 5);
- * gbc_PRODUTO2.gridx = 5; gbc_PRODUTO2.gridy = 1; camadaProdutos.add(PRODUTO2,
- * gbc_PRODUTO2); PRODUTO2.setBackground(Color.WHITE); PRODUTO2.setBorder(new
- * BevelBorder(BevelBorder.LOWERED, new Color(192, 192, 192), new Color(64, 64,
- * 64), Color.WHITE, null));
- * PRODUTO2.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * PRODUTO2.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * PRODUTO2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
- * PRODUTO2.setLayout(new BoxLayout(PRODUTO2, BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_31 = new JLabel("");
- * label_31.setAlignmentX(Component.CENTER_ALIGNMENT);
- * label_31.setHorizontalAlignment(SwingConstants.CENTER); label_31.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/003-livro.png")));
- * PRODUTO2.add(label_31);
- * 
- * JLabel lblLivro1 = new JLabel("LIVRO 01"); lblLivro1.setMaximumSize(new
- * Dimension(132, 25)); lblLivro1.setAlignmentX(Component.CENTER_ALIGNMENT);
- * lblLivro1.setHorizontalAlignment(SwingConstants.CENTER);
- * PRODUTO2.add(lblLivro1);
- * 
- * JLabel lblR1 = new JLabel("R$ 10"); lblR1.setMinimumSize(new Dimension(132,
- * 25)); lblR1.setMaximumSize(new Dimension(132, 25));
- * lblR1.setAlignmentX(Component.CENTER_ALIGNMENT);
- * lblR1.setHorizontalAlignment(SwingConstants.CENTER); PRODUTO2.add(lblR1);
- * 
- * JButton btnNewButton1 = new JButton("Adicionar");
- * PRODUTO2.add(btnNewButton1);
- * btnNewButton1.setAlignmentX(Component.CENTER_ALIGNMENT);
- * 
- * JSpinner spinner1 = new JSpinner(); spinner1.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner1.setMaximumSize(new Dimension(60,
- * 25)); PRODUTO2.add(spinner1); PRODUTO2.setFocusTraversalPolicy( new
- * FocusTraversalOnArray(new Component[] { label_31, lblLivro1, lblR1,
- * btnNewButton1 }));
- * 
- * //
- * -----------------------------------------------------------------------------
- * -------------------------------------------------/ JPanel PRODUTO1 = new
- * JPanel(); PRODUTO1.setName("produto"); GridBagConstraints gbc_PRODUTO1 = new
- * GridBagConstraints(); gbc_PRODUTO1.fill = GridBagConstraints.BOTH;
- * gbc_PRODUTO1.insets = new Insets(0, 0, 5, 5); gbc_PRODUTO1.gridx = 7;
- * gbc_PRODUTO1.gridy = 1; camadaProdutos.add(PRODUTO1, gbc_PRODUTO1);
- * PRODUTO1.setBackground(Color.WHITE); PRODUTO1.setBorder(new
- * BevelBorder(BevelBorder.LOWERED, new Color(192, 192, 192), new Color(64, 64,
- * 64), Color.WHITE, null));
- * PRODUTO1.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * PRODUTO1.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * PRODUTO1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
- * PRODUTO1.setLayout(new BoxLayout(PRODUTO1, BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_3 = new JLabel(""); label_3.setName("figura");
- * label_3.setAlignmentX(Component.CENTER_ALIGNMENT);
- * label_3.setHorizontalAlignment(SwingConstants.CENTER); label_3.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/003-livro.png")));
- * PRODUTO1.add(label_3);
- * 
- * JLabel lblLivro = new JLabel("LIVRO 01"); lblLivro.setMaximumSize(new
- * Dimension(132, 25)); lblLivro.setAlignmentX(Component.CENTER_ALIGNMENT);
- * lblLivro.setHorizontalAlignment(SwingConstants.CENTER);
- * PRODUTO1.add(lblLivro);
- * 
- * JLabel lblR = new JLabel("R$ 10"); lblR.setMaximumSize(new Dimension(132,
- * 25)); lblR.setAlignmentX(Component.CENTER_ALIGNMENT);
- * lblR.setHorizontalAlignment(SwingConstants.CENTER); PRODUTO1.add(lblR);
- * 
- * JButton btnNewButton = new JButton("Adicionar"); PRODUTO1.add(btnNewButton);
- * btnNewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
- * 
- * JSpinner spinner = new JSpinner(); spinner.setModel(new SpinnerNumberModel(1,
- * 1, 20, 1)); spinner.setMaximumSize(new Dimension(60, 25));
- * PRODUTO1.add(spinner); PRODUTO1.setFocusTraversalPolicy( new
- * FocusTraversalOnArray(new Component[] { label_3, lblLivro, lblR, btnNewButton
- * })); //
- * -----------------------------------------------------------------------------
- * -------------------------------------------------------------------/
- * 
- * 
- * 
- * JPanel panel_5 = new JPanel(); GridBagConstraints gbc_panel_5 = new
- * GridBagConstraints(); gbc_panel_5.fill = GridBagConstraints.BOTH;
- * gbc_panel_5.insets = new Insets(0, 0, 5, 5); gbc_panel_5.gridx = 1;
- * gbc_panel_5.gridy = 3; camadaProdutos.add(panel_5, gbc_panel_5);
- * panel_5.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel_5.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel_5.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel_5.setBackground(Color.WHITE); panel_5.setLayout(new BoxLayout(panel_5,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_20 = new JLabel(""); label_20.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/001-cd.png")));
- * label_20.setHorizontalAlignment(SwingConstants.CENTER);
- * label_20.setAlignmentX(0.5f); panel_5.add(label_20);
- * 
- * JLabel label_21 = new JLabel("LIVRO 01"); label_21.setMaximumSize(new
- * Dimension(132, 25)); label_21.setHorizontalAlignment(SwingConstants.CENTER);
- * label_21.setAlignmentX(0.5f); panel_5.add(label_21);
- * 
- * JLabel label_22 = new JLabel("R$ 10"); label_22.setMaximumSize(new
- * Dimension(132, 25)); label_22.setHorizontalAlignment(SwingConstants.CENTER);
- * label_22.setAlignmentX(0.5f); panel_5.add(label_22);
- * 
- * JButton button_5 = new JButton("Adicionar"); button_5.setAlignmentX(0.5f);
- * panel_5.add(button_5);
- * 
- * JSpinner spinner_6 = new JSpinner(); spinner_6.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_6.setMaximumSize(new Dimension(60,
- * 25)); panel_5.add(spinner_6);
- * 
- * JPanel panel_4 = new JPanel(); GridBagConstraints gbc_panel_4 = new
- * GridBagConstraints(); gbc_panel_4.fill = GridBagConstraints.BOTH;
- * gbc_panel_4.insets = new Insets(0, 0, 5, 5); gbc_panel_4.gridx = 3;
- * gbc_panel_4.gridy = 3; camadaProdutos.add(panel_4, gbc_panel_4);
- * panel_4.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel_4.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel_4.setBackground(Color.WHITE); panel_4.setLayout(new BoxLayout(panel_4,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_17 = new JLabel(""); label_17.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/003-livro.png")));
- * label_17.setHorizontalAlignment(SwingConstants.CENTER);
- * label_17.setAlignmentX(0.5f); panel_4.add(label_17);
- * 
- * JLabel label_18 = new JLabel("LIVRO 01"); label_18.setMaximumSize(new
- * Dimension(132, 25)); label_18.setHorizontalAlignment(SwingConstants.CENTER);
- * label_18.setAlignmentX(0.5f); panel_4.add(label_18);
- * 
- * JLabel label_19 = new JLabel("R$ 10"); label_19.setMaximumSize(new
- * Dimension(132, 25)); label_19.setHorizontalAlignment(SwingConstants.CENTER);
- * label_19.setAlignmentX(0.5f); panel_4.add(label_19);
- * 
- * JButton button_4 = new JButton("Adicionar"); button_4.setAlignmentX(0.5f);
- * panel_4.add(button_4);
- * 
- * JSpinner spinner_5 = new JSpinner(); spinner_5.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_5.setMaximumSize(new Dimension(60,
- * 25)); panel_4.add(spinner_5);
- * 
- * JPanel panel_3 = new JPanel(); GridBagConstraints gbc_panel_3 = new
- * GridBagConstraints(); gbc_panel_3.fill = GridBagConstraints.BOTH;
- * gbc_panel_3.insets = new Insets(0, 0, 5, 5); gbc_panel_3.gridx = 5;
- * gbc_panel_3.gridy = 3; camadaProdutos.add(panel_3, gbc_panel_3);
- * panel_3.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel_3.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel_3.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel_3.setBackground(Color.WHITE); panel_3.setLayout(new BoxLayout(panel_3,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_14 = new JLabel(""); label_14.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/002-dvd.png")));
- * label_14.setHorizontalAlignment(SwingConstants.CENTER);
- * label_14.setAlignmentX(0.5f); panel_3.add(label_14);
- * 
- * JLabel label_15 = new JLabel("LIVRO 01"); label_15.setMaximumSize(new
- * Dimension(132, 25)); label_15.setHorizontalAlignment(SwingConstants.CENTER);
- * label_15.setAlignmentX(0.5f); panel_3.add(label_15);
- * 
- * JLabel label_16 = new JLabel("R$ 10"); label_16.setMaximumSize(new
- * Dimension(132, 25)); label_16.setHorizontalAlignment(SwingConstants.CENTER);
- * label_16.setAlignmentX(0.5f); panel_3.add(label_16);
- * 
- * JButton button_3 = new JButton("Adicionar"); button_3.setAlignmentX(0.5f);
- * panel_3.add(button_3);
- * 
- * JSpinner spinner_4 = new JSpinner(); spinner_4.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_4.setMaximumSize(new Dimension(60,
- * 25)); panel_3.add(spinner_4);
- * 
- * JPanel panel_2 = new JPanel(); GridBagConstraints gbc_panel_2 = new
- * GridBagConstraints(); gbc_panel_2.fill = GridBagConstraints.BOTH;
- * gbc_panel_2.insets = new Insets(0, 0, 5, 5); gbc_panel_2.gridx = 7;
- * gbc_panel_2.gridy = 3; camadaProdutos.add(panel_2, gbc_panel_2);
- * panel_2.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
- * panel_2.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
- * panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192,
- * 192), new Color(64, 64, 64), Color.WHITE, null));
- * panel_2.setBackground(Color.WHITE); panel_2.setLayout(new BoxLayout(panel_2,
- * BoxLayout.PAGE_AXIS));
- * 
- * JLabel label_11 = new JLabel(""); label_11.setIcon(new
- * ImageIcon(TelaPrincipal.class.getResource("/images/002-dvd.png")));
- * label_11.setHorizontalAlignment(SwingConstants.CENTER);
- * label_11.setAlignmentX(0.5f); panel_2.add(label_11);
- * 
- * JLabel label_12 = new JLabel("LIVRO 01"); label_12.setMaximumSize(new
- * Dimension(132, 25)); label_12.setHorizontalAlignment(SwingConstants.CENTER);
- * label_12.setAlignmentX(0.5f); panel_2.add(label_12);
- * 
- * JLabel label_13 = new JLabel("R$ 10"); label_13.setMaximumSize(new
- * Dimension(132, 25)); label_13.setHorizontalAlignment(SwingConstants.CENTER);
- * label_13.setAlignmentX(0.5f); panel_2.add(label_13);
- * 
- * JButton button_2 = new JButton("Adicionar"); button_2.setAlignmentX(0.5f);
- * panel_2.add(button_2);
- * 
- * JSpinner spinner_3 = new JSpinner(); spinner_3.setModel(new
- * SpinnerNumberModel(1, 1, 20, 1)); spinner_3.setMaximumSize(new Dimension(60,
- * 25)); panel_2.add(spinner_3);
- * 
- * //
- */

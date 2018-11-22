@@ -9,11 +9,11 @@ public class Estoque {
 	}
 	
 	public void AdicionarQuantidadeDisponivel(int quantidade) {
-		QuantidadeDisponivel =+ quantidade;
+		QuantidadeDisponivel += quantidade;
 	}
 	
 	public void removeQuantidadeDisponivel(int quantidade) {
-		QuantidadeDisponivel =- quantidade;
+		QuantidadeDisponivel -= quantidade;
 	}
 	
 	public int getQuantidadeDisponivel() {
@@ -25,11 +25,11 @@ public class Estoque {
 	}
 
 	public void setQuantidadeVendida(int quantidadeVendida) {
-		QuantidadeVendida =+ quantidadeVendida;
+		QuantidadeVendida = quantidadeVendida;
 	}
 	
 	public void RemoveQuantidadeVendida(int quantidadeVendida) {
-		QuantidadeVendida =- quantidadeVendida;
+		QuantidadeVendida = quantidadeVendida;
 	}
 	
 
