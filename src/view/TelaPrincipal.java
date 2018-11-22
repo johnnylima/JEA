@@ -201,8 +201,6 @@ public class TelaPrincipal extends JFrame {
 
 //									System.out.println(prod.getFigura());
 		}
-		Produto prod = new Produto("Burton", ECategoriaProduto.DVD, 25, 1, "/images/002-dvd.png");
-		produtoController.Inserir(prod);
 		// GERANDO PRODUTOS INICIAIS
 		// -----------------------------------------------------------------------------------------/
 
@@ -1038,6 +1036,26 @@ public class TelaPrincipal extends JFrame {
 		preco.setHorizontalAlignment(SwingConstants.CENTER);
 		produto.add(preco);
 
+		if (scroll.getName() == "camadaCarrinho") {
+			JSpinner spinner = new JSpinner();
+			 spinner.addChangeListener(new ChangeListener() {
+				 
+			 	public void stateChanged(ChangeEvent e) {
+			 		
+			 		int anterior = ((int)(((JSpinner)e.getSource()).getPreviousValue()));
+			 		int atual = ((int)(((JSpinner)e.getSource()).getValue()));
+			 		
+			 	}
+			 });
+			spinner.setName(nomeSpinner);// nomeSpinner="spinner1"
+			if (p.getQuantidadeDisponivel() >= 1)
+				spinner.setModel(new SpinnerNumberModel(1, 1, p.getQuantidadeDisponivel(), 1));
+			else if (p.getQuantidadeDisponivel() == 0)
+				spinner.setModel(new SpinnerNumberModel(0, 0, p.getQuantidadeDisponivel(), 0));
+			spinner.setMaximumSize(new Dimension(60, 25));
+			produto.add(spinner);
+		}
+		
 		if (scroll.getName() == "camadaProdutos") {
 			
 			JButton botao = new JButton("Adicionar");
@@ -1046,7 +1064,6 @@ public class TelaPrincipal extends JFrame {
 				// TODO BOTÃO ADICIONAR
 				@Override
 				public void mouseClicked(MouseEvent e) {
-						p.setQuantidadeVendida(1);
 						carrinhoController.Inserir(p);
 						setCarrinhoValorTotal(p.getValor());
 						scroll.removeAll();
@@ -1071,27 +1088,6 @@ public class TelaPrincipal extends JFrame {
 
 			produto.setFocusTraversalPolicy(
 					new FocusTraversalOnArray(new Component[] { figura, descricao, preco, botao }));
-		}
-
-		if (scroll.getName() == "camadaCarrinho") {
-			JSpinner spinner = new JSpinner();
-			 spinner.addChangeListener(new ChangeListener() {
-				 
-			 	public void stateChanged(ChangeEvent e) {
-			 		
-			 		p.RemoveQuantidadeVendida((int)(((JSpinner) e.getSource()).getPreviousValue()));
-			 		p.setQuantidadeVendida((int)(((JSpinner) e.getSource()).getValue()));
-			 		
-			 	}
-			 });
-			 
-			spinner.setName(nomeSpinner);// nomeSpinner="spinner1"
-			if (p.getQuantidadeDisponivel() >= 1)
-				spinner.setModel(new SpinnerNumberModel(1, 1, p.getQuantidadeDisponivel(), 1));
-			else if (p.getQuantidadeDisponivel() == 0)
-				spinner.setModel(new SpinnerNumberModel(0, 0, p.getQuantidadeDisponivel(), 0));
-			spinner.setMaximumSize(new Dimension(60, 25));
-			produto.add(spinner);
 		}
 
 		if (scroll.getName() == "camadaConsultar") {
