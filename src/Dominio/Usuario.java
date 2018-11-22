@@ -1,4 +1,4 @@
-package controller; 
+package Dominio; 
 
 import Enum.ETipoUsuario;
 

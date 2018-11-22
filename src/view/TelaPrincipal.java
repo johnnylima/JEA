@@ -51,7 +51,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
+import Dominio.Pedido;
+import Dominio.Produto;
+import Dominio.Usuario;
 import Enum.ECategoriaProduto;
+import Enum.ETipoUsuario;
 
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JPasswordField;
@@ -87,9 +91,11 @@ public class TelaPrincipal extends JFrame {
 	private Component[] bnts;
 	private Component[] telas;
 
-	// CARRINHO
-	Carrinho carrinho = new Carrinho();
-	Loja loja = new Loja();
+	CarrinhoController carrinhoController = new CarrinhoController();
+	ProdutoController produtoController = new ProdutoController();
+	PedidoController pedidoController = new PedidoController();
+	UsuarioController usuarioController = new UsuarioController();
+	
 	private JPanel pTela;
 	private JTextField textCodigo;
 	
@@ -158,6 +164,19 @@ public class TelaPrincipal extends JFrame {
 		// -----------------------------------------------------------------------------------------/
 		// no final >> crinaod os produtos na classe
 		// TODO gerando produtos iniciais
+		
+		Usuario User = new Usuario("Gerente","123",ETipoUsuario.Gerente);
+		Usuario User1 = new Usuario("Cliente1","123",ETipoUsuario.Cliente);
+		Usuario User2 = new Usuario("Cliente2","123",ETipoUsuario.Cliente);
+		usuarioController.Inserir(User);
+		usuarioController.Inserir(User1);
+		usuarioController.Inserir(User2);
+		//Logar Usuario antes
+		if(LoginController.Logar("Gerente", "123"))
+			System.out.println("logado");
+		else
+			System.out.println("erro ao logar");
+		
 		String[] Descricao = { "Burton", "Gwendolyn", "Acton", "Colt", "Kerry", "Briar", "Lawrence", "Preston", "Maite",
 				"Ishmael", "Kyle", "Willa", "Evangeline", "Luke", "Fallon" };
 		String[] Categoria = { "DVD", "CD", "CD", "LIVRO", "CD", "DVD", "LIVRO", "LIVRO", "CD", "LIVRO", "CD", "LIVRO",
@@ -177,7 +196,7 @@ public class TelaPrincipal extends JFrame {
 				prod = new Produto(Descricao[i], ECategoriaProduto.CD, 10, qtdEstoque[i], figuraLivro[2]);
 			}
 
-			loja.addProduto(prod);
+			produtoController.Inserir(prod);
 
 //									System.out.println(prod.getFigura());
 		}
@@ -189,7 +208,8 @@ public class TelaPrincipal extends JFrame {
 		// -----------------------------------------------------------------------------------------/
 		// no final >> crinaod os produtos na classe
 		// TODO gerando produtos iniciais
-
+		
+		/*
 		String[] pedidoDescricao = { "Burton", "Gwendolyn", "Acton", "Colt", "Kerry", "Briar", "Lawrence", "Preston",
 				"Maite", "Ishmael", "Kyle", "Willa", "Evangeline", "Luke", "Fallon" };
 		String[] pedidoCategoria = { "DVD", "CD", "CD", "LIVRO", "CD", "DVD", "LIVRO", "LIVRO", "CD", "LIVRO", "CD",
@@ -272,7 +292,8 @@ public class TelaPrincipal extends JFrame {
 		allPedidos.addPedido(pedido1);
 		allPedidos.addPedido(pedido2);
 		allPedidos.addPedido(pedido3);
-
+		*/
+		
 		// GERANDO PEDIDOS FAKE
 		// -----------------------------------------------------------------------------------------/
 		
@@ -481,13 +502,13 @@ public class TelaPrincipal extends JFrame {
 		textCodigo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				if(((JTextField) e.getSource()).getText().trim().equals("") || (allPedidos.getPedido(((JTextField) e.getSource()).getText())==null)) JOptionPane.showMessageDialog(null, "Digite um código válido.","CÓDIGO INVÁLIDO",2);
+				if(((JTextField) e.getSource()).getText().trim().equals("") || (pedidoController.getPedido(((JTextField) e.getSource()).getText())==null)) JOptionPane.showMessageDialog(null, "Digite um código válido.","CÓDIGO INVÁLIDO",2);
 				else {
 
 					camadaConsultar.removeAll();
 					camadaConsultar.revalidate();
 					camadaConsultar.repaint();
-					addPedidoCamada((allPedidos.getPedido(((JTextField) e.getSource()).getText())), camadaConsultar);
+					addPedidoCamada((pedidoController.getPedido(((JTextField) e.getSource()).getText())), camadaConsultar);
 				}
 				((JTextField) e.getSource()).setText("");			
 //				JOptionPane.showMessageDialog(null, ((JTextField) e.getSource()).getText());
@@ -505,7 +526,7 @@ public class TelaPrincipal extends JFrame {
 				camadaConsultar.removeAll();
 				camadaConsultar.revalidate();
 				camadaConsultar.repaint();
-				addPedidosCamada(allPedidos, camadaConsultar);
+				addPedidosCamada(pedidoController.GetAll(), camadaConsultar);
 			}
 		});
 		btnTodos.setName("btnTodos");
@@ -607,7 +628,7 @@ public class TelaPrincipal extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				setVisible(e.getComponent(), telas);
 				setTela(roxoclaro2, e.getComponent(), titulo, cabecalho, bnts);
-				addProdutoCamada(carrinho.getProdutos(), camadaCarrinho);
+				addProdutoCamada(carrinhoController.GetAll(), camadaCarrinho);
 			}
 		});
 
@@ -619,7 +640,7 @@ public class TelaPrincipal extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				setVisible(e.getComponent(), telas);
 				setTela(roxoclaro, e.getComponent(), titulo, cabecalho, bnts);
-				addProdutoCamada(loja.getProdutos(), camadaProdutos);
+				addProdutoCamada(produtoController.GetAll(), camadaProdutos);
 			}
 		});
 		b1.setBackground(primary);
@@ -784,7 +805,7 @@ public class TelaPrincipal extends JFrame {
 		 *********************************/
 		// */
 
-//		/*
+		/*
 		 JPanel PRODUTO1 = new JPanel(); PRODUTO1.setName("produto");
 		 GridBagConstraints gbc_PRODUTO1 = new GridBagConstraints(); gbc_PRODUTO1.fill
 		 = GridBagConstraints.BOTH; gbc_PRODUTO1.insets = new Insets(0, 0, 5, 5);
@@ -952,8 +973,9 @@ public class TelaPrincipal extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 //					JOptionPane.showMessageDialog(null, e.getComponent().getName());
 
-					loja.addProduto(p);
-					carrinho.removeProduto(p);
+					carrinhoController.Excluir(p);
+					//loja.addProduto();
+					//carrinho.removeProduto(p);
 //					System.out.println("carrinho: " + carrinho.qtdProduto() + "\nloja: " + loja.qtdProduto());
 
 //					System.out.println(e.getComponent().getParent().getName());
@@ -961,7 +983,7 @@ public class TelaPrincipal extends JFrame {
 					scroll.removeAll();
 					scroll.revalidate();
 					scroll.repaint();
-					addProdutoCamada(carrinho.getProdutos(), scroll);
+					addProdutoCamada(carrinhoController.GetAll(), scroll);
 
 //					System.out.println(p.estoqueQtd());
 
@@ -1007,15 +1029,16 @@ public class TelaPrincipal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 
-					carrinho.addProduto(p);
-					loja.removeProduto(p);
+					carrinhoController.Inserir(p);
+					//carrinho.addProduto();
+					//loja.removeProduto(p);
 					
 					setCarrinhoValorTotal(p.getValor());
 					
 					scroll.removeAll();
 					scroll.revalidate();
 					scroll.repaint();
-					addProdutoCamada(loja.getProdutos(), scroll);
+					addProdutoCamada(produtoController.GetAll(), scroll);
 
 				}
 			});
@@ -1049,16 +1072,16 @@ public class TelaPrincipal extends JFrame {
 			 });
 			 
 			spinner.setName(nomeSpinner);// nomeSpinner="spinner1"
-			if (p.estoqueQtd() >= 1)
-				spinner.setModel(new SpinnerNumberModel(1, 1, p.estoqueQtd(), 1));
-			else if (p.estoqueQtd() == 0)
-				spinner.setModel(new SpinnerNumberModel(0, 0, p.estoqueQtd(), 0));
+			if (p.getQuantidadeDisponivel() >= 1)
+				spinner.setModel(new SpinnerNumberModel(1, 1, p.getQuantidadeDisponivel(), 1));
+			else if (p.getQuantidadeDisponivel() == 0)
+				spinner.setModel(new SpinnerNumberModel(0, 0, p.getQuantidadeDisponivel(), 0));
 			spinner.setMaximumSize(new Dimension(60, 25));
 			produto.add(spinner);
 		}
 
 		if (scroll.getName() == "camadaConsultar") {
-			String qtde = "QTD: " + (p.estoqueQtd());
+			String qtde = "QTD: " + (p.getQuantidadeVendida());
 			JLabel qtd = new JLabel(qtde);// pPreco="R$ 10"
 			qtd.setMaximumSize(new Dimension(132, 25));
 			qtd.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1184,7 +1207,7 @@ public class TelaPrincipal extends JFrame {
 	}
 
 	// CAMADA CONSULTAR
-	public void addPedidosCamada(Pedidos p, JPanel camada) {
+	public void addPedidosCamada(ArrayList<Pedido> p, JPanel camada) {
 		String nomePedido = "pedido";
 		String numeroPedido = "PEDIDO ";
 		String pNumeroPedido = "pedidoNumero";
@@ -1195,9 +1218,9 @@ public class TelaPrincipal extends JFrame {
 		for (int x = 1; x <= 7; x += 2) {
 			for (int y = 1; y <= 7; y += 2) {
 
-				if (i < p.qtdPedidos())
+				if (i < p.size())
 					addPedidoCard(nomePedido + i, camada, y, x, numeroPedido + (i + 1), pNumeroPedido + i, lCodigo + i,
-							lValorTotal + i, p.getPedidos().get(i));
+							lValorTotal + i, p.get(i));
 				i++;
 			}
 
@@ -1234,7 +1257,7 @@ public class TelaPrincipal extends JFrame {
 	}
 	
 	public void ValorTotal(JPanel camada) {
-		carrinho.getProdutos();		
+		carrinhoController.GetAll();
 	}
 }// final
 
