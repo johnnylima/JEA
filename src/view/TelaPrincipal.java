@@ -961,7 +961,7 @@ public class TelaPrincipal extends JFrame {
 
 		String rootFigura = p.getFigura();
 		String pDescricao = p.getDescricao();
-		String pPreco = Double.toString(p.getValor());
+		String pPreco = Integer.toString(p.getValor());
 
 		JPanel produto = new JPanel();
 		produto.setName(nomeProduto);// nomeProduto="produto1"
@@ -1039,13 +1039,14 @@ public class TelaPrincipal extends JFrame {
 		produto.add(preco);
 
 		if (scroll.getName() == "camadaProdutos") {
+			
 			JButton botao = new JButton("Adicionar");
 			botao.setName(nomeBotao);// nomeBotao="adicionar1"
 			botao.addMouseListener(new MouseAdapter() {
 				// TODO BOTÃO ADICIONAR
 				@Override
 				public void mouseClicked(MouseEvent e) {
-
+						p.setQuantidadeVendida(1);
 						carrinhoController.Inserir(p);
 						setCarrinhoValorTotal(p.getValor());
 						scroll.removeAll();
@@ -1055,6 +1056,7 @@ public class TelaPrincipal extends JFrame {
 				
 				}
 			});
+			
 			if(p.getQuantidadeDisponivel() <= 0) {
 				JLabel indisponivel = new JLabel("Indisponivel");
 				indisponivel.setMaximumSize(new Dimension(132, 25));
@@ -1077,14 +1079,9 @@ public class TelaPrincipal extends JFrame {
 				 
 			 	public void stateChanged(ChangeEvent e) {
 			 		
-			 		int anterior = (int) (((JSpinner) e.getSource()).getPreviousValue());
-			 		int atual = (int) (((JSpinner) e.getSource()).getValue());
+			 		p.RemoveQuantidadeVendida((int)(((JSpinner) e.getSource()).getPreviousValue()));
+			 		p.setQuantidadeVendida((int)(((JSpinner) e.getSource()).getValue()));
 			 		
-			 		System.out.println(p.getValor()*atual);
-			 		
-			 		p.setQuantidadeVendida(atual);
-//			 		System.out.println(anterior);
-//			 		System.out.println(atual);
 			 	}
 			 });
 			 
@@ -1154,7 +1151,6 @@ public class TelaPrincipal extends JFrame {
 		pedido.addMouseListener(new MouseAdapter() {
 			@Override // PEDIDO
 			public void mouseClicked(MouseEvent e) {
-
 				scroll.removeAll();
 				scroll.revalidate();
 				scroll.repaint();

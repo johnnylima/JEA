@@ -14,11 +14,11 @@ public class PedidoRepository {
 	public void Inserir(ArrayList<Produto> produto) throws LimiteMaximoException {
 		Pedido pedido = new Pedido();
 		pedido.setCodigo(gerarCodigo());
-		
 		for	(Produto prod : produto) {
 				if(prod.getQuantidadeVendida() <= 10) {
 					pedido.setValorTotal(prod.getValor()*prod.getQuantidadeVendida());
 					pedido.setProdutos(prod);
+					prod.RemoveEstoque(prod.getQuantidadeVendida());
 				} else {
 					throw new LimiteMaximoException();
 				}

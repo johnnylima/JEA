@@ -25,7 +25,11 @@ public class Estoque {
 	}
 
 	public void setQuantidadeVendida(int quantidadeVendida) {
-		QuantidadeVendida = quantidadeVendida;
+		QuantidadeVendida =+ quantidadeVendida;
+	}
+	
+	public void RemoveQuantidadeVendida(int quantidadeVendida) {
+		QuantidadeVendida =- quantidadeVendida;
 	}
 	
 

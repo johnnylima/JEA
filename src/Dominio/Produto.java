@@ -64,4 +64,8 @@ public class Produto{
 	public void setQuantidadeVendida(int quantidadeVendida) {
 		this.Estoque.setQuantidadeVendida(quantidadeVendida);
 	}
+	
+	public void RemoveQuantidadeVendida(int quantidadeVendida) {
+		this.Estoque.RemoveQuantidadeVendida(quantidadeVendida);
+	}
 }
