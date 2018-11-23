@@ -51,8 +51,10 @@ import javax.swing.JTabbedPane;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import com.sun.org.apache.bcel.internal.classfile.ConstantLong;
 import com.sun.prism.image.ViewPort;
 
+import Dominio.Estoque;
 import Dominio.Pedido;
 import Dominio.Produto;
 import Dominio.Usuario;
@@ -89,6 +91,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class TelaPrincipal extends JFrame {
 
@@ -99,14 +103,13 @@ public class TelaPrincipal extends JFrame {
 	CarrinhoController carrinhoController = new CarrinhoController();
 	ProdutoController produtoController = new ProdutoController();
 	PedidoController pedidoController = new PedidoController();
-	UsuarioController usuarioController = new UsuarioController();
-	
-	
+
 	private Component[] camadaScroll;
-	
+
 	private JPanel pTela;
 	private JTextField textCodigo;
-	
+	private JTextField descricaoProduto;
+	private JTextField precoProduto;
 
 	/**
 	 * Launch the application.
@@ -172,42 +175,7 @@ public class TelaPrincipal extends JFrame {
 		// no final >> crinaod os produtos na classe
 		// TODO gerando produtos iniciais
 		
-		Usuario User = new Usuario("Gerente","123",ETipoUsuario.Gerente);
-		Usuario User1 = new Usuario("Cliente1","123",ETipoUsuario.Cliente);
-		Usuario User2 = new Usuario("Cliente2","123",ETipoUsuario.Cliente);
-		usuarioController.Inserir(User);
-		usuarioController.Inserir(User1);
-		usuarioController.Inserir(User2);
-		//Logar Usuario antes
-		if(LoginController.Logar("Gerente", "123")) {
-//			System.out.println("logado");
-		}
-		else
-			System.out.println("erro ao logar");
 		
-		String[] Descricao = { "Burton", "Gwendolyn", "Acton", "Colt", "Kerry", "Briar", "Lawrence", "Preston", "Maite",
-				"Ishmael", "Kyle", "Willa", "Evangeline", "Luke", "Fallon" };
-		String[] Categoria = { "DVD", "CD", "CD", "LIVRO", "CD", "DVD", "LIVRO", "LIVRO", "CD", "LIVRO", "CD", "LIVRO",
-				"LIVRO", "CD", "DVD" };
-		int[] qtdEstoque = { 1, 0, 10, 25, 18, 21, 2, 11, 12, 1, 3, 4, 16, 40, 50 };
-		String[] figuraLivro = { "/images/003-livro.png", "/images/002-dvd.png", "/images/001-cd.png" };
-		;
-		int a;
-		for (int i = 0; i < Descricao.length; i++) {
-			Produto prod = null;
-			a = i + 1;
-			if (Categoria[i] == "LIVRO") {
-				prod = new Produto(Descricao[i], ECategoriaProduto.LIVRO, 30, qtdEstoque[i], figuraLivro[0]);
-			} else if (Categoria[i] == "DVD") {
-				prod = new Produto(Descricao[i], ECategoriaProduto.DVD, 25, qtdEstoque[i], figuraLivro[1]);
-			} else if (Categoria[i] == "CD") {
-				prod = new Produto(Descricao[i], ECategoriaProduto.CD, 10, qtdEstoque[i], figuraLivro[2]);
-			}
-
-			produtoController.Inserir(prod);
-
-//									System.out.println(prod.getFigura());
-		}
 		
 
 		setBackground(new Color(51, 102, 255));
@@ -262,154 +230,241 @@ public class TelaPrincipal extends JFrame {
 		pTela.setBounds(221, 147, 780, 444);
 		contentPane.add(pTela);
 		pTela.setLayout(null);
-								
-										JPanel Produtos = new JPanel();
-										Produtos.setBounds(0, 0, 780, 444);
-										pTela.add(Produtos);
-										Produtos.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-										Produtos.setAutoscrolls(true);
-										Produtos.setName("Produtos");
-										Produtos.setBackground(fundo);
-										Produtos.setLayout(null);
-										
-												JScrollPane scrollProdutos = new JScrollPane();
-												scrollProdutos.setName("scrollProdutos");
-												scrollProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-												scrollProdutos.setBorder(null);
-												scrollProdutos.setBounds(-1, -1, 780, 444);
-												scrollProdutos.getVerticalScrollBar().setUnitIncrement(16);
-												Produtos.add(scrollProdutos);
-												
-														JPanel camadaProdutos = new JPanel();
-														camadaProdutos.setName("camadaProdutos");
-														camadaProdutos.setBackground(fundo);
-														scrollProdutos.setViewportView(camadaProdutos);
-														GridBagLayout gbl_camadaProdutos = new GridBagLayout();
-														gbl_camadaProdutos.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31 };
-														gbl_camadaProdutos.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30 };
-														gbl_camadaProdutos.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-														gbl_camadaProdutos.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-														camadaProdutos.setLayout(gbl_camadaProdutos);
-						
-								JPanel Carrinho = new JPanel();
-								Carrinho.setBounds(0, 0, 780, 444);
-								pTela.add(Carrinho);
-								Carrinho.setLayout(null);
-								Carrinho.setName("Carrinho");
-								Carrinho.setBackground(new Color(139, 69, 19));
-								
-										JScrollPane scrollCarrinho = new JScrollPane();
-										scrollCarrinho.setName("scrollCarrinho");
-										scrollCarrinho.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-										scrollCarrinho.setBorder(null);
-										scrollCarrinho.setBounds(-1, 55, 780, 388);
-										scrollCarrinho.getVerticalScrollBar().setUnitIncrement(16);
-										
-										JPanel controleCarrinho = new JPanel();
-										controleCarrinho.setName("controleCarrinho");
-										controleCarrinho.setLayout(null);
-										controleCarrinho.setBounds(0, 0, 780, 56);
-										Carrinho.add(controleCarrinho);
-										
-										JLabel lblValorTotal = new JLabel("Valor Total:       R$");
-										lblValorTotal.setName("codigoPedido");
-										lblValorTotal.setBounds(10, 16, 105, 24);
-										controleCarrinho.add(lblValorTotal);
-										
-										
-										JSeparator separator_2 = new JSeparator();
-										separator_2.setOrientation(SwingConstants.VERTICAL);
-										separator_2.setName("s1");
-										separator_2.setBounds(220, 0, 3, 56);
-										controleCarrinho.add(separator_2);
-										
-										JSeparator separator_3 = new JSeparator();
-										separator_3.setOrientation(SwingConstants.VERTICAL);
-										separator_3.setName("s2");
-										separator_3.setBounds(409, 0, 3, 56);
-										controleCarrinho.add(separator_3);
-										
-										
-										JLabel labelValorTotal = new JLabel(String.valueOf(carrinhoController.getValorTotal()));
-										labelValorTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
-										labelValorTotal.setHorizontalAlignment(SwingConstants.RIGHT);
-										labelValorTotal.setHorizontalTextPosition(SwingConstants.RIGHT);
-										labelValorTotal.setName("labelValorTotal");
-										labelValorTotal.setBounds(125, 16, 72, 24);
-										controleCarrinho.add(labelValorTotal);
-										Carrinho.add(scrollCarrinho);
-										
-												JPanel camadaCarrinho = new JPanel();
-												camadaCarrinho.setName("camadaCarrinho");
-												camadaCarrinho.setBackground(new Color(40, 51, 80));
-												scrollCarrinho.setViewportView(camadaCarrinho);
-												GridBagLayout gbl_camadaCarrinho = new GridBagLayout();
-												gbl_camadaCarrinho.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31, 0 };
-												gbl_camadaCarrinho.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30, 0 };
-												gbl_camadaCarrinho.columnWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-														Double.MIN_VALUE };
-												gbl_camadaCarrinho.rowWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-														Double.MIN_VALUE };
-												camadaCarrinho.setLayout(gbl_camadaCarrinho);
-												
-												JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
-												btnFinalizarCompra.addMouseListener(new MouseAdapter() {
-													//TODO FINALIZAR
-													@Override //FINALIZAR
-													public void mouseClicked(MouseEvent e) {
-														try {
-															
-															if(!(carrinhoController.GetAll().isEmpty())) {
-//												System.out.println("ko");
-																pedidoController.Inserir(carrinhoController.GetAll());
-																carrinhoController.zerarValorTotal();
-																labelValorTotal.setText(String.valueOf(carrinhoController.getValorTotal()));
-																
-																carrinhoController.ExcluirTodos();
-																
-																repaintAllCamadas();
-																
-																
-															}
-															
-														} catch (LimiteMaximoException e1) {
-															JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", 2);
-														}
-													}
-												});
-												btnFinalizarCompra.setName("btnFinalizarCompra");
-												btnFinalizarCompra.setBounds(233, 16, 166, 24);
-												controleCarrinho.add(btnFinalizarCompra);
+
+		JPanel Cadastrar = new JPanel();
+		Cadastrar.setName("Cadastrar");
+		Cadastrar.setBackground(fundo);
+		Cadastrar.setAlignmentY(1.0f);
+		Cadastrar.setAlignmentX(1.0f);
+		Cadastrar.setBounds(0, 0, 780, 444);
+		pTela.add(Cadastrar);
+		Cadastrar.setLayout(null);
+
+		JPanel controleCadastrar = new JPanel();
+		controleCadastrar.setLayout(null);
+		controleCadastrar.setName("controleCadastrar");
+		controleCadastrar.setBounds(0, 0, 780, 56);
+		Cadastrar.add(controleCadastrar);
+
+		JSeparator separator_4 = new JSeparator();
+		separator_4.setOrientation(SwingConstants.VERTICAL);
+		separator_4.setName("s1");
+		separator_4.setBounds(220, 0, 3, 56);
+		controleCadastrar.add(separator_4);
+
+		JPanel formCadastrar = new JPanel();
+		formCadastrar.setName("formCadastrar");
+		formCadastrar.setBounds(225, 66, 330, 364);
+		Cadastrar.add(formCadastrar);
+		formCadastrar.setLayout(new BoxLayout(formCadastrar, BoxLayout.PAGE_AXIS));
+
+		JLabel lblDescrioDoProduto = new JLabel("Descri\u00E7\u00E3o do Produto");
+		lblDescrioDoProduto.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblDescrioDoProduto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDescrioDoProduto.setMaximumSize(new Dimension(330, 80));
+		lblDescrioDoProduto.setAlignmentX(Component.CENTER_ALIGNMENT);
+		formCadastrar.add(lblDescrioDoProduto);
+
+		descricaoProduto = new JTextField();
+		descricaoProduto.setName("descricaoProduto");
+		descricaoProduto.setMaximumSize(new Dimension(240, 30));
+		formCadastrar.add(descricaoProduto);
+		descricaoProduto.setColumns(10);
+
+		JLabel lblPreo = new JLabel("Pre\u00E7o");
+		lblPreo.setMaximumSize(new Dimension(330, 40));
+		lblPreo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPreo.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPreo.setAlignmentX(0.5f);
+		formCadastrar.add(lblPreo);
+
+		precoProduto = new JTextField();
+		precoProduto.setName("precoProduto");
+		precoProduto.setMaximumSize(new Dimension(240, 30));
+		precoProduto.setColumns(10);
+		formCadastrar.add(precoProduto);
+
+		JLabel lblEstoqueInicial = new JLabel("Estoque Inicial");
+		lblEstoqueInicial.setMaximumSize(new Dimension(330, 40));
+		lblEstoqueInicial.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEstoqueInicial.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblEstoqueInicial.setAlignmentX(0.5f);
+		formCadastrar.add(lblEstoqueInicial);
+
+		JSpinner estoqueProduto = new JSpinner();
+		estoqueProduto.setMaximumSize(new Dimension(80, 30));
+		estoqueProduto.setName("estoqueProduto");
+		formCadastrar.add(estoqueProduto);
+
+		JLabel lblCategoriaDoProduto = new JLabel("Categoria do Produto");
+		lblCategoriaDoProduto.setMaximumSize(new Dimension(330, 40));
+		lblCategoriaDoProduto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriaDoProduto.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblCategoriaDoProduto.setAlignmentX(0.5f);
+		formCadastrar.add(lblCategoriaDoProduto);
+
+		JComboBox categoriaProduto = new JComboBox();
+		categoriaProduto.setName("categoriaProduto");
+		categoriaProduto.setModel(new DefaultComboBoxModel(new String[] { "LIVRO", "DVD", "CD" }));
+		categoriaProduto.setMaximumSize(new Dimension(230, 30));
+		formCadastrar.add(categoriaProduto);
+
+		JButton btnCadastrar = new JButton("CADASTRAR");
+		btnCadastrar.addMouseListener(new MouseAdapter() {
+			//TODO CADASTRAMENTO
+			@Override // BOTÃO DE CADASTRAMENTO
+			public void mouseClicked(MouseEvent e) {
 				
-						JPanel Cadastrar = new JPanel();
-						Cadastrar.setName("Cadastrar");
-						Cadastrar.setBackground(fundo);
-						Cadastrar.setAlignmentY(1.0f);
-						Cadastrar.setAlignmentX(1.0f);
-						Cadastrar.setBounds(0, 0, 780, 444);
-						pTela.add(Cadastrar);
-						Cadastrar.setLayout(null);
-						
-						JPanel controleCadastrar = new JPanel();
-						controleCadastrar.setLayout(null);
-						controleCadastrar.setName("controleCadastrar");
-						controleCadastrar.setBounds(0, 0, 780, 56);
-						Cadastrar.add(controleCadastrar);
-						
-						JSeparator separator_4 = new JSeparator();
-						separator_4.setOrientation(SwingConstants.VERTICAL);
-						separator_4.setName("s1");
-						separator_4.setBounds(220, 0, 3, 56);
-						controleCadastrar.add(separator_4);
-						
-						JButton btnCadastrar = new JButton("CADASTRAR");
-						btnCadastrar.setName("btnFinalizarCompra");
-						btnCadastrar.setBounds(29, 15, 166, 24);
-						controleCadastrar.add(btnCadastrar);
-						
-						JPanel panel = new JPanel();
-						panel.setBounds(225, 66, 330, 364);
-						Cadastrar.add(panel);
+				if (descricaoProduto.getText() != "" | precoProduto.getText() != "") {
+
+//															System.out.println(descricaoProduto.getText());
+//															System.out.println(precoProduto.getText());
+//															System.out.println(estoqueProduto.getValue());
+//															System.out.println(categoriaProduto.getSelectedIndex());
+
+					String[] figuraLivro = { "/images/003-livro.png", "/images/002-dvd.png", "/images/001-cd.png" };
+					Produto prod = null;
+
+					String Descricao = descricaoProduto.getText();
+					int Valor = Integer.parseInt(precoProduto.getText());
+					int Estoque = (Integer) estoqueProduto.getValue();
+
+					if (categoriaProduto.getSelectedIndex() == 0) {
+						prod = new Produto(Descricao, ECategoriaProduto.LIVRO, Valor, Estoque, figuraLivro[0]);
+					} else if (categoriaProduto.getSelectedIndex() == 1) {
+						prod = new Produto(Descricao, ECategoriaProduto.DVD, Valor, Estoque, figuraLivro[1]);
+					} else if (categoriaProduto.getSelectedIndex() == 2) {
+						prod = new Produto(Descricao, ECategoriaProduto.CD, Valor, Estoque, figuraLivro[2]);
+					}
+
+					produtoController.Inserir(prod);
+					
+					JOptionPane.showMessageDialog(null, "Produto cadastrado!", "CADASTRO", 1);
+					
+					descricaoProduto.setText("");
+					precoProduto.setText("");
+					estoqueProduto.setValue(0);
+					categoriaProduto.setSelectedIndex(0);																							
+				}
+			}
+		});
+		btnCadastrar.setName("btnFinalizarCompra");
+		btnCadastrar.setBounds(29, 15, 166, 24);
+		controleCadastrar.add(btnCadastrar);
+
+		JPanel Produtos = new JPanel();
+		Produtos.setBounds(0, 0, 780, 444);
+		pTela.add(Produtos);
+		Produtos.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		Produtos.setAutoscrolls(true);
+		Produtos.setName("Produtos");
+		Produtos.setBackground(fundo);
+		Produtos.setLayout(null);
+
+		JScrollPane scrollProdutos = new JScrollPane();
+		scrollProdutos.setName("scrollProdutos");
+		scrollProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollProdutos.setBorder(null);
+		scrollProdutos.setBounds(-1, -1, 780, 444);
+		scrollProdutos.getVerticalScrollBar().setUnitIncrement(16);
+		Produtos.add(scrollProdutos);
+
+		JPanel camadaProdutos = new JPanel();
+		camadaProdutos.setName("camadaProdutos");
+		camadaProdutos.setBackground(fundo);
+		scrollProdutos.setViewportView(camadaProdutos);
+		GridBagLayout gbl_camadaProdutos = new GridBagLayout();
+		gbl_camadaProdutos.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31 };
+		gbl_camadaProdutos.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30 };
+		gbl_camadaProdutos.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_camadaProdutos.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		camadaProdutos.setLayout(gbl_camadaProdutos);
+
+		JPanel Carrinho = new JPanel();
+		Carrinho.setBounds(0, 0, 780, 444);
+		pTela.add(Carrinho);
+		Carrinho.setLayout(null);
+		Carrinho.setName("Carrinho");
+		Carrinho.setBackground(new Color(139, 69, 19));
+
+		JScrollPane scrollCarrinho = new JScrollPane();
+		scrollCarrinho.setName("scrollCarrinho");
+		scrollCarrinho.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollCarrinho.setBorder(null);
+		scrollCarrinho.setBounds(-1, 55, 780, 388);
+		scrollCarrinho.getVerticalScrollBar().setUnitIncrement(16);
+
+		JPanel controleCarrinho = new JPanel();
+		controleCarrinho.setName("controleCarrinho");
+		controleCarrinho.setLayout(null);
+		controleCarrinho.setBounds(0, 0, 780, 56);
+		Carrinho.add(controleCarrinho);
+
+		JLabel lblValorTotal = new JLabel("Valor Total:       R$");
+		lblValorTotal.setName("codigoPedido");
+		lblValorTotal.setBounds(10, 16, 105, 24);
+		controleCarrinho.add(lblValorTotal);
+
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setName("s1");
+		separator_2.setBounds(220, 0, 3, 56);
+		controleCarrinho.add(separator_2);
+
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setOrientation(SwingConstants.VERTICAL);
+		separator_3.setName("s2");
+		separator_3.setBounds(409, 0, 3, 56);
+		controleCarrinho.add(separator_3);
+
+		JLabel labelValorTotal = new JLabel(String.valueOf(carrinhoController.getValorTotal()));
+		labelValorTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
+		labelValorTotal.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelValorTotal.setHorizontalTextPosition(SwingConstants.RIGHT);
+		labelValorTotal.setName("labelValorTotal");
+		labelValorTotal.setBounds(125, 16, 72, 24);
+		controleCarrinho.add(labelValorTotal);
+		Carrinho.add(scrollCarrinho);
+
+		JPanel camadaCarrinho = new JPanel();
+		camadaCarrinho.setName("camadaCarrinho");
+		camadaCarrinho.setBackground(new Color(40, 51, 80));
+		scrollCarrinho.setViewportView(camadaCarrinho);
+		GridBagLayout gbl_camadaCarrinho = new GridBagLayout();
+		gbl_camadaCarrinho.columnWidths = new int[] { 32, 150, 32, 150, 32, 150, 32, 150, 31, 0 };
+		gbl_camadaCarrinho.rowHeights = new int[] { 30, 177, 30, 177, 30, 177, 30, 177, 30, 0 };
+		gbl_camadaCarrinho.columnWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		gbl_camadaCarrinho.rowWeights = new double[] { 0.0, 1.0, 4.9E-324, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		camadaCarrinho.setLayout(gbl_camadaCarrinho);
+
+		JButton btnFinalizarCompra = new JButton("FINALIZAR COMPRA");
+		btnFinalizarCompra.addMouseListener(new MouseAdapter() {
+			// TODO FINALIZAR
+			@Override // FINALIZAR
+			public void mouseClicked(MouseEvent e) {
+				try {
+
+					if (!(carrinhoController.GetAll().isEmpty())) {
+						pedidoController.Inserir(carrinhoController.GetAll());
+						carrinhoController.zerarValorTotal();
+						labelValorTotal.setText(String.valueOf(carrinhoController.getValorTotal()));
+
+						carrinhoController.ExcluirTodos();
+
+						repaintAllCamadas();
+
+					}
+
+				} catch (LimiteMaximoException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", 2);
+				}
+			}
+		});
+		btnFinalizarCompra.setName("btnFinalizarCompra");
+		btnFinalizarCompra.setBounds(233, 16, 166, 24);
+		controleCarrinho.add(btnFinalizarCompra);
 
 		JPanel Consultar = new JPanel();
 		Consultar.setBounds(0, 0, 780, 444);
@@ -437,7 +492,6 @@ public class TelaPrincipal extends JFrame {
 		codigoPedido.setName("codigoPedido");
 		controleConsultar.add(codigoPedido);
 
-
 		JSeparator separator = new JSeparator();
 		separator.setName("s1");
 		separator.setOrientation(SwingConstants.VERTICAL);
@@ -461,19 +515,22 @@ public class TelaPrincipal extends JFrame {
 		gbl_camadaConsultar.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		gbl_camadaConsultar.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		camadaConsultar.setLayout(gbl_camadaConsultar);
-		
+
 		textCodigo = new JTextField();
 		textCodigo.setToolTipText("Digite o c\u00F3digo e pressione ENTER");
 		textCodigo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if(((JTextField) e.getSource()).getText().trim().equals("") || (pedidoController.getPedido(((JTextField) e.getSource()).getText())==null)) JOptionPane.showMessageDialog(null, "Digite um código válido.","CÓDIGO INVÁLIDO",2);
+
+				if (((JTextField) e.getSource()).getText().trim().equals("")
+						|| (pedidoController.getPedido(((JTextField) e.getSource()).getText()) == null))
+					JOptionPane.showMessageDialog(null, "Digite um código válido.", "CÓDIGO INVÁLIDO", 2);
 				else {
 
 					repaintAllCamadas();
-					addPedidoCamada((pedidoController.getPedido(((JTextField) e.getSource()).getText())), camadaConsultar);
+					addPedidoCamada((pedidoController.getPedido(((JTextField) e.getSource()).getText())),
+							camadaConsultar);
 				}
-				((JTextField) e.getSource()).setText("");			
+				((JTextField) e.getSource()).setText("");
 //				JOptionPane.showMessageDialog(null, ((JTextField) e.getSource()).getText());
 			}
 		});
@@ -481,7 +538,7 @@ public class TelaPrincipal extends JFrame {
 		textCodigo.setName("textCodigo");
 		controleConsultar.add(textCodigo);
 		textCodigo.setColumns(10);
-		
+
 		JButton btnTodos = new JButton("LISTAR TODOS");
 		btnTodos.addMouseListener(new MouseAdapter() {
 			@Override // LISTAR TODOS
@@ -498,59 +555,7 @@ public class TelaPrincipal extends JFrame {
 		btnTodos.setBounds(278, 16, 121, 24);
 		controleConsultar.add(btnTodos);
 
-		// TODO PANELS = PEDIDO
-		/*
-		 * JPanel pedido = new JPanel(); pedido.addMouseListener(new MouseAdapter() {
-		 * 
-		 * @Override public void mouseClicked(MouseEvent arg0) { } });
-		 * pedido.setName("pedido"); GridBagConstraints gbc_pedido = new
-		 * GridBagConstraints(); gbc_pedido.fill = GridBagConstraints.BOTH;
-		 * gbc_pedido.insets = new Insets(0, 0, 5, 5); gbc_pedido.gridx = 1;
-		 * gbc_pedido.gridy = 3; camadaConsultar.add(pedido, gbc_pedido);
-		 * pedido.setBackground(Color.WHITE); pedido.setBorder(new
-		 * BevelBorder(BevelBorder.LOWERED, new Color(192, 192, 192), new Color(64, 64,
-		 * 64), Color.WHITE, null));
-		 * pedido.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
-		 * pedido.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		 * pedido.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		 * pedido.setLayout(new BoxLayout(pedido, BoxLayout.PAGE_AXIS));
-		 * 
-		 * JLabel pedidoNumero = new JLabel("PEDIDO 10");
-		 * pedidoNumero.setName("pedidoNumero"); pedidoNumero.setMaximumSize(new
-		 * Dimension(150, 43));
-		 * pedidoNumero.setHorizontalAlignment(SwingConstants.CENTER);
-		 * pedidoNumero.setForeground(Color.RED); pedidoNumero.setFont(new
-		 * Font("Tahoma", Font.BOLD, 14)); pedidoNumero.setAlignmentX(0.5f);
-		 * pedido.add(pedidoNumero);
-		 * 
-		 * JLabel labelCodigo = new JLabel("C\u00D3DIGO");
-		 * labelCodigo.setVerticalAlignment(SwingConstants.BOTTOM);
-		 * labelCodigo.setName("labelCodigo"); labelCodigo.setMaximumSize(new
-		 * Dimension(150, 33)); labelCodigo.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 * labelCodigo.setHorizontalAlignment(SwingConstants.CENTER);
-		 * pedido.add(labelCodigo);
-		 * 
-		 * JLabel codigo = new JLabel("1524"); codigo.setForeground(Color.BLUE);
-		 * codigo.setFont(new Font("Tahoma", Font.BOLD, 11)); codigo.setName("codigo");
-		 * codigo.setMaximumSize(new Dimension(150, 33));
-		 * codigo.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 * codigo.setHorizontalAlignment(SwingConstants.CENTER); pedido.add(codigo);
-		 * 
-		 * JLabel labelValorTotal = new JLabel("VALOR TOTAL");
-		 * labelValorTotal.setVerticalAlignment(SwingConstants.BOTTOM);
-		 * labelValorTotal.setName("labelValorTotal");
-		 * labelValorTotal.setMaximumSize(new Dimension(150, 33));
-		 * labelValorTotal.setHorizontalAlignment(SwingConstants.CENTER);
-		 * labelValorTotal.setAlignmentX(0.5f); pedido.add(labelValorTotal);
-		 * 
-		 * JLabel valorTotal = new JLabel("R$ 10"); valorTotal.setFont(new
-		 * Font("Tahoma", Font.BOLD, 11)); valorTotal.setForeground(new Color(0, 128,
-		 * 0)); valorTotal.setMaximumSize(new Dimension(150, 33));
-		 * valorTotal.setHorizontalAlignment(SwingConstants.CENTER);
-		 * valorTotal.setAlignmentX(0.5f); pedido.add(valorTotal);
-		 * pedido.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] {
-		 * labelCodigo, codigo })); //
-		 */
+		
 
 		// TODO @MENUS
 		JPanel b2 = new JPanel();
@@ -559,9 +564,13 @@ public class TelaPrincipal extends JFrame {
 			// TODO CARRINHO
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setVisible(e.getComponent(), telas);
-				setTela(roxoclaro2, e.getComponent(), titulo, cabecalho, bnts);
-				addProdutoCamada(carrinhoController.GetAll(), camadaCarrinho);
+				if(!(LoginController.getSession().getTipoUsuario()==ETipoUsuario.Gerente)) {
+					setVisible(e.getComponent(), telas);
+					setTela(roxoclaro2, e.getComponent(), titulo, cabecalho, bnts);
+					addProdutoCamada(carrinhoController.GetAll(), camadaCarrinho);
+				}
+				else JOptionPane.showMessageDialog(null, "Sem permissão");
+				
 			}
 		});
 
@@ -571,9 +580,11 @@ public class TelaPrincipal extends JFrame {
 			// TODO PRODUTO
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setVisible(e.getComponent(), telas);
-				setTela(roxoclaro, e.getComponent(), titulo, cabecalho, bnts);
-				addProdutoCamada(produtoController.GetAll(), camadaProdutos);
+				if(!(LoginController.getSession().getTipoUsuario()==ETipoUsuario.Gerente)) {
+					setVisible(e.getComponent(), telas);
+					setTela(roxoclaro, e.getComponent(), titulo, cabecalho, bnts);
+					addProdutoCamada(produtoController.GetAll(), camadaProdutos);
+				}
 			}
 		});
 		b1.setBackground(primary);
@@ -654,8 +665,54 @@ public class TelaPrincipal extends JFrame {
 		label_2.setBounds(35, 11, 32, 34);
 		b3.add(label_2);
 
+//		// LOGIN
+//		Login tlm = new Login();
+		
+String logado = null;
+		
 		// LOGIN
+		
 		Login tlm = new Login();
+		
+		
+		tlm.setVisible(true);
+		
+		if (LoginController.getSession() != null) {
+			logado = "Logoff | " + LoginController.getSession().getLogin();
+		} else {
+			System.exit(-1);
+		}
+		
+		
+
+		
+		
+		
+		String[] Descricao = { "Burton", "Gwendolyn", "Acton", "Colt", "Kerry", "Briar", "Lawrence", "Preston", "Maite",
+				"Ishmael", "Kyle", "Willa", "Evangeline", "Luke", "Fallon" };
+		String[] Categoria = { "DVD", "CD", "CD", "LIVRO", "CD", "DVD", "LIVRO", "LIVRO", "CD", "LIVRO", "CD", "LIVRO",
+				"LIVRO", "CD", "DVD" };
+		int[] qtdEstoque = { 1, 0, 10, 25, 18, 21, 2, 11, 12, 1, 3, 4, 16, 40, 50 };
+		String[] figuraLivro = { "/images/003-livro.png", "/images/002-dvd.png", "/images/001-cd.png" };
+		;
+		int a;
+		for (int i = 0; i < Descricao.length-7; i++) {
+			Produto prod = null;
+			a = i + 1;
+			if (Categoria[i] == "LIVRO") {
+				prod = new Produto(Descricao[i], ECategoriaProduto.LIVRO, 30, qtdEstoque[i], figuraLivro[0]);
+			} else if (Categoria[i] == "DVD") {
+				prod = new Produto(Descricao[i], ECategoriaProduto.DVD, 25, qtdEstoque[i], figuraLivro[1]);
+			} else if (Categoria[i] == "CD") {
+				prod = new Produto(Descricao[i], ECategoriaProduto.CD, 10, qtdEstoque[i], figuraLivro[2]);
+			}
+
+			produtoController.Inserir(prod);
+
+//									System.out.println(prod.getFigura());
+		}
+		
+		
 
 		JPanel b4 = new JPanel();
 		b4.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -665,26 +722,24 @@ public class TelaPrincipal extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				// setVisible(e.getComponent(), telas);
 				// setTela(roxoclaro4, e.getComponent(), titulo, cabecalho, bnts);
-
-				if (tlm.session()) {
-					((JLabel) ((JPanel) e.getComponent()).getComponent(0)).setText("Logar");
-					tlm.setSession();
+					
+				tlm.setVisible(true);
+				if (LoginController.getSession() != null) {
+					((JLabel) ((JPanel) e.getComponent()).getComponent(0)).setText("Logoff | " + LoginController.getSession().getLogin());
 				} else {
 					((JPanel) e.getComponent()).setEnabled(false);
-					tlm.setVisible(true);
-					if (tlm.session())
-						((JLabel) ((JPanel) e.getComponent()).getComponent(0)).setText("Logoff | " + tlm.getLogin());
-					((JPanel) e.getComponent()).setEnabled(true);
 				}
 
 			}
 		});
+		
+
 		b4.setLayout(null);
 		b4.setBackground(new Color(30, 35, 54));
 		b4.setBounds(0, 524, 221, 56);
 		menu.add(b4);
 
-		JLabel l4 = new JLabel("Logar");
+		JLabel l4 = new JLabel(logado);
 		l4.setHorizontalAlignment(SwingConstants.LEFT);
 		l4.setForeground(new Color(207, 209, 213));
 		l4.setBounds(90, 11, 122, 34);
@@ -700,99 +755,44 @@ public class TelaPrincipal extends JFrame {
 		label_4.setBackground(Color.WHITE);
 		label_4.setBounds(35, 11, 32, 34);
 		b4.add(label_4);
-		
+
 		JPanel panel_1 = new JPanel();
+		panel_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panel_1.setName("Cadastrar");
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override // CADASTRAR
+			public void mouseClicked(MouseEvent e) {
+				if((LoginController.getSession().getTipoUsuario()==ETipoUsuario.Gerente)) {
+				setVisible(e.getComponent(), telas);
+				setTela(roxoclaro2, e.getComponent(), titulo, cabecalho, bnts);
+				}
+				else JOptionPane.showMessageDialog(null, "Sem permissão");
+			}
+		});
 		panel_1.setLayout(null);
 		panel_1.setBackground(new Color(30, 35, 54));
 		panel_1.setBounds(0, 312, 221, 56);
 		menu.add(panel_1);
-		
+
 		JLabel lblCadastrar = new JLabel("Cadastrar");
 		lblCadastrar.setHorizontalAlignment(SwingConstants.LEFT);
 		lblCadastrar.setForeground(new Color(207, 209, 213));
 		lblCadastrar.setBounds(90, 11, 122, 34);
 		panel_1.add(lblCadastrar);
-		
+
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(30, 35, 54));
 		panel_2.setBounds(0, 0, 5, 56);
 		panel_1.add(panel_2);
-		
+
 		JLabel label_6 = new JLabel("");
 		label_6.setIcon(new ImageIcon(TelaPrincipal.class.getResource("/images/001-shopping-cart.png")));
 		label_6.setBackground(Color.WHITE);
 		label_6.setBounds(33, 11, 32, 34);
 		panel_1.add(label_6);
 
-		/*
-		 * copy paste
-		 */
-
-//		for(Produtos p: listaProdutos) System.out.println(p.getDescricao());
-
-		// no final >>
-		/*******************************
-		 * CRIANDO PRODUTO POR CLASSE
-		 *********************************/
-		// */
-
-		/*
-		 JPanel PRODUTO1 = new JPanel(); PRODUTO1.setName("produto");
-		 GridBagConstraints gbc_PRODUTO1 = new GridBagConstraints(); gbc_PRODUTO1.fill
-		 = GridBagConstraints.BOTH; gbc_PRODUTO1.insets = new Insets(0, 0, 5, 5);
-		 gbc_PRODUTO1.gridx = 1; gbc_PRODUTO1.gridy = 1; camadaCarrinho.add(PRODUTO1,
-		 gbc_PRODUTO1); PRODUTO1.setBackground(Color.WHITE); PRODUTO1.setBorder(new
-		 BevelBorder(BevelBorder.LOWERED, new Color(192, 192, 192), new Color(64, 64,
-		 64), Color.WHITE, null));
-		 PRODUTO1.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
-		 PRODUTO1.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		 PRODUTO1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		 PRODUTO1.setLayout(new BoxLayout(PRODUTO1, BoxLayout.PAGE_AXIS));
-		 
-		 JLabel close = new JLabel(""); close.addMouseListener(new MouseAdapter() {
-		 
-		 @Override public void mouseClicked(MouseEvent e) { } });
-		 close.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		 close.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		 close.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 close.setAlignmentY(Component.BOTTOM_ALIGNMENT); close.setIconTextGap(1);
-		 close.setName("close"); close.setIcon(new
-		 ImageIcon(TelaPrincipal.class.getResource("/images/close.png")));
-		 close.setMaximumSize(new Dimension(16, 24));
-		 close.setHorizontalAlignment(SwingConstants.CENTER); PRODUTO1.add(close);
-		 
-		 JLabel label_3 = new JLabel(""); label_3.setName("figura");
-		 label_3.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 label_3.setHorizontalAlignment(SwingConstants.CENTER); label_3.setIcon(new
-		 ImageIcon(TelaPrincipal.class.getResource("/images/003-livro.png")));
-		 PRODUTO1.add(label_3);
-		 
-		 JLabel lblLivro = new JLabel("LIVRO 01"); lblLivro.setMaximumSize(new
-		 Dimension(132, 25)); lblLivro.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 lblLivro.setHorizontalAlignment(SwingConstants.CENTER);
-		 PRODUTO1.add(lblLivro);
-		 
-		 JLabel lblR = new JLabel("R$ 10"); lblR.setMaximumSize(new Dimension(132,
-		 25)); lblR.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 lblR.setHorizontalAlignment(SwingConstants.CENTER); PRODUTO1.add(lblR);
-		 
-		 JButton btnNewButton = new JButton("Adicionar"); //
-		 PRODUTO1.add(btnNewButton);
-		 btnNewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		 
-		 JSpinner spinner = new JSpinner(); 
-		 spinner.addChangeListener(new ChangeListener() {
-		 	public void stateChanged(ChangeEvent arg0) {
-		 	}
-		 });spinner.setModel(new SpinnerNumberModel(1,
-		 1, 20, 1)); spinner.setMaximumSize(new Dimension(60, 25));
-		 PRODUTO1.add(spinner); PRODUTO1.setFocusTraversalPolicy( new
-		 FocusTraversalOnArray(new Component[] { label_3, lblLivro, lblR })); // //
-		 //*/
-
-		/*******************************
-		 * CRIANDO PRODUTO POR CLASSE
-		 *********************************/
+		
+		
 
 		// no final >> COLETANDO TODOS OS BOTÕES DE MENU
 		bnts = menu.getComponents();
@@ -803,9 +803,8 @@ public class TelaPrincipal extends JFrame {
 		// TODAS AS TELAS INVISIVEIS
 		for (Component tela : telas)
 			tela.setVisible(false);
-		
-		camadaScroll = pTela.getComponents();
 
+		camadaScroll = pTela.getComponents();
 	}
 
 	/******************** SETTELA ******************/
@@ -838,6 +837,7 @@ public class TelaPrincipal extends JFrame {
 				((JPanel) t).setVisible(true);
 			} else
 				((JPanel) t).setVisible(false);
+			
 		}
 	}
 
@@ -896,8 +896,6 @@ public class TelaPrincipal extends JFrame {
 		produto.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		produto.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		produto.setLayout(new BoxLayout(produto, BoxLayout.PAGE_AXIS));
-		
-		
 
 		if (scroll.getName() == "camadaCarrinho") {
 			JLabel close = new JLabel("");
@@ -905,25 +903,23 @@ public class TelaPrincipal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 //					JOptionPane.showMessageDialog(null, e.getComponent().getName());
-					
 
 					carrinhoController.Excluir(p);
-					
+
 					if (scroll.getName() == "camadaCarrinho") {
 						JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
-						for(Component c: controle.getComponents()) {
-							if(c.getName().equals("labelValorTotal")) {
-								JLabel a= (JLabel) c;
+						for (Component c : controle.getComponents()) {
+							if (c.getName().equals("labelValorTotal")) {
+								JLabel a = (JLabel) c;
 //								System.out.println(a.getText());
 								carrinhoController.setValorTotal(carrinhoController.GetAll());
 								a.setText(String.valueOf(carrinhoController.getValorTotal()));
 							}
 						}
 					}
-					
 
 					repaintAllCamadas();
-					
+
 					addProdutoCamada(carrinhoController.GetAll(), scroll);
 
 //					System.out.println(p.estoqueQtd());
@@ -964,65 +960,65 @@ public class TelaPrincipal extends JFrame {
 
 		if (scroll.getName() == "camadaCarrinho") {
 			JSpinner spinner = new JSpinner();
-			 spinner.addChangeListener(new ChangeListener() {
-				 
-			 	public void stateChanged(ChangeEvent e) {
-			 		
+			spinner.addChangeListener(new ChangeListener() {
+
+				public void stateChanged(ChangeEvent e) {
+
 //			 		int anterior = ((int)(((JSpinner)e.getSource()).getPreviousValue()));
-			 		int atual = ((int)(((JSpinner)e.getSource()).getValue()));
-			 		
-			 		//QUANTIDADE VENDIDA
-			 		p.setQuantidadeVendida(atual);
+					int atual = ((int) (((JSpinner) e.getSource()).getValue()));
+
+					// QUANTIDADE VENDIDA
+					p.setQuantidadeVendida(atual);
 					carrinhoController.setValorTotal(carrinhoController.GetAll());
-					
+
 					if (scroll.getName() == "camadaCarrinho") {
 						JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
-						for(Component c: controle.getComponents()) {
-							if(c.getName().equals("labelValorTotal")) {
-								JLabel a= (JLabel) c;
+						for (Component c : controle.getComponents()) {
+							if (c.getName().equals("labelValorTotal")) {
+								JLabel a = (JLabel) c;
 //								System.out.println(a.getText());
 								a.setText(String.valueOf(carrinhoController.getValorTotal()));
 							}
 						}
 					}
-			 		
-			 	}
-			 });
+
+				}
+			});
 			spinner.setName(nomeSpinner);// nomeSpinner="spinner1"
 			spinner.setModel(new SpinnerNumberModel(p.getQuantidadeVendida(), 1, p.getQuantidadeDisponivel(), 1));
 			spinner.setMaximumSize(new Dimension(60, 25));
-			
+
 			produto.add(spinner);
 		}
-		
+
 		if (scroll.getName() == "camadaProdutos") {
-			
+
 			JButton botao = new JButton("Adicionar");
 			botao.setName(nomeBotao);// nomeBotao="adicionar1"
 			botao.addMouseListener(new MouseAdapter() {
 				// TODO BOTÃO ADICIONAR
 				@Override
 				public void mouseClicked(MouseEvent e) {
-						
-						if(!(carrinhoController.GetAll().contains(p))) { //se o produto não estiver dentro do carrinho ele adiciona
-							
-							//QUANTIDADE VENDIDA
-							p.setQuantidadeVendida(1);
-									
-							carrinhoController.Inserir(p);
-							carrinhoController.setValorTotal(carrinhoController.GetAll());
-							
 
-							repaintAllCamadas();
-							
-							addProdutoCamada(produtoController.GetAll(), scroll);
-						}
+					if (!(carrinhoController.GetAll().contains(p))) { // se o produto não estiver dentro do carrinho ele
+																		// adiciona
+
+						// QUANTIDADE VENDIDA
+						p.setQuantidadeVendida(1);
+
+						carrinhoController.Inserir(p);
+						carrinhoController.setValorTotal(carrinhoController.GetAll());
+
+						repaintAllCamadas();
+
+						addProdutoCamada(produtoController.GetAll(), scroll);
+					}
 //						else System.out.println("já tem");
 				}
-				
+
 			});
-			
-			if(p.getQuantidadeDisponivel() < 1) {
+
+			if (p.getQuantidadeDisponivel() < 1) {
 				JLabel indisponivel = new JLabel("Indisponivel");
 				indisponivel.setMaximumSize(new Dimension(132, 25));
 				indisponivel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1031,7 +1027,7 @@ public class TelaPrincipal extends JFrame {
 			} else {
 				produto.add(botao);
 			}
-			
+
 			botao.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 			produto.setFocusTraversalPolicy(
@@ -1046,12 +1042,12 @@ public class TelaPrincipal extends JFrame {
 			qtd.setHorizontalAlignment(SwingConstants.CENTER);
 			produto.add(qtd);
 		}
-		
+
 		if (scroll.getName() == "camadaCarrinho") {
 			JPanel controle = (JPanel) scroll.getParent().getParent().getParent().getComponent(0);
-			for(Component c: controle.getComponents()) {
-				if(c.getName().equals("labelValorTotal")) {
-					JLabel a= (JLabel) c;
+			for (Component c : controle.getComponents()) {
+				if (c.getName().equals("labelValorTotal")) {
+					JLabel a = (JLabel) c;
 //					System.out.println(a.getText());
 					a.setText(String.valueOf(carrinhoController.getValorTotal()));
 				}
@@ -1192,6 +1188,7 @@ public class TelaPrincipal extends JFrame {
 
 		}
 	}
+
 	// CAMADA CONSULTAR
 	public void addPedidoCamada(Pedido p, JPanel camada) {
 		String nomePedido = "pedido";
@@ -1212,17 +1209,16 @@ public class TelaPrincipal extends JFrame {
 
 		}
 	}
-		
-	
+
 	public void repaintAllCamadas() {
-		for(Component x: camadaScroll) {
+		for (Component x : camadaScroll) {
 			JPanel a = (JPanel) x;
-			for(Component s: a.getComponents()) {
+			for (Component s : a.getComponents()) {
 //				System.out.println("s = " + s.getName());
-				if(s instanceof JScrollPane) {
+				if (s instanceof JScrollPane) {
 					JViewport u = ((JScrollPane) s).getViewport();
-					JPanel scroll = (JPanel)u.getView();
-					
+					JPanel scroll = (JPanel) u.getView();
+
 					scroll.removeAll();
 					scroll.revalidate();
 					scroll.repaint();
@@ -1231,12 +1227,11 @@ public class TelaPrincipal extends JFrame {
 			}
 //			System.out.println(a.getComponentCount());
 		}
-		
+
 //		for(JPanel scroll: c) {
 //			scroll.removeAll();
 //			scroll.revalidate();
 //			scroll.repaint();
 //		}
 	}
-	
 }// final

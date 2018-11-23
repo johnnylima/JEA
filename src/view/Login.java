@@ -18,6 +18,10 @@ import javax.swing.JPasswordField;
 import java.awt.Window.Type;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
+import Dominio.Usuario;
+import Enum.ETipoUsuario;
+import controller.LoginController;
+import controller.UsuarioController;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -45,23 +49,6 @@ public class Login extends JDialog {
 	 * Launch the application.
 	 */
 	
-
-	
-	
-	private String login;
-	private String senha;
-	private boolean ss = false;
-	
-	public String getLogin() {
-		return login;
-	}
-	
-	public boolean session() {
-		return ss;
-	}
-	public void setSession() {
-		ss = !(ss);
-	}
 	
 	
 	public static void main(String[] args) {
@@ -87,7 +74,16 @@ public class Login extends JDialog {
 		setType(Type.UTILITY);
 		
 		
+
+
+		UsuarioController usuarioController = new UsuarioController();
 		
+		Usuario User = new Usuario("Gerente", "123", ETipoUsuario.Gerente);
+		Usuario User1 = new Usuario("Cliente1", "123", ETipoUsuario.Cliente);
+		Usuario User2 = new Usuario("Cliente2", "123", ETipoUsuario.Cliente);
+		usuarioController.Inserir(User);
+		usuarioController.Inserir(User1);
+		usuarioController.Inserir(User2);
 		
 		
 			
@@ -140,13 +136,9 @@ public class Login extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					//TODO ENTRAR
 					public void actionPerformed(ActionEvent e) {
-						if( auth(loginField.getText(), new String(passwordField.getPassword())) ) {
-							//JOptionPane.showMessageDialog(null, "OK");
-							
-							login = loginField.getText();
-							senha = new String(passwordField.getPassword());
-							
-							setSession();
+						
+						
+						if(LoginController.Logar(loginField.getText(), new String(passwordField.getPassword()))){
 							
 							loginField.setText("");
 							passwordField.setText("");
@@ -166,11 +158,5 @@ public class Login extends JDialog {
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{getContentPane(), contentPanel, label, loginField, label_1, passwordField, buttonPane, okButton}));
 	}
 	
-	public boolean auth(String login, String senha) {
-		String l= "gerente";
-		String s = "123";
-		
-		return login.equals(l) && senha.equals(s);
-		
-	}
+	
 }

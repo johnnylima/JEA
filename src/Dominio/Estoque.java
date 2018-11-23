@@ -8,6 +8,9 @@ public class Estoque {
 		this.QuantidadeDisponivel = QuantidadeDisponivel;
 	}
 	
+	public Estoque() {
+	}
+	
 	public void AdicionarQuantidadeDisponivel(int quantidade) {
 		QuantidadeDisponivel += quantidade;
 	}

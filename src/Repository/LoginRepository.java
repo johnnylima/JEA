@@ -19,4 +19,5 @@ public class LoginRepository extends UsuarioRepository{
 	public static Usuario getSession() {
 		return Session;
 	}
+
 }
